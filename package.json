@@ -59,6 +59,8 @@
     "mocha": "10.0.0"
   },
   "dependencies": {
-    "fastify": "4.5.2"
+    "fastify": "4.5.2",
+    "@aicore/libmysql": "^1.0.21",
+    "@aicore/libcommonutils": "1.0.12"
   }
 }
