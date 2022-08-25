@@ -38,14 +38,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aicore/template-nodejs.git"
+    "url": "https://github.com/aicore/cocodb.git"
   },
-  "author": "Arun, core.ai",
+  "author": "charly, core.ai",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/aicore/template-nodejs/issues"
+    "url": "https://github.com/aicore/cocodb/issues"
   },
-  "homepage": "https://github.com/aicore/template-nodejs#readme",
+  "homepage": "https://github.com/aicore/cocodb#readme",
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
     "@commitlint/config-conventional": "17.0.3",
@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "fastify": "4.5.2",
-    "@aicore/libmysql": "^1.0.21",
+    "@aicore/libmysql": "1.0.21",
     "@aicore/libcommonutils": "1.0.12"
   }
 }
