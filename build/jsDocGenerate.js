@@ -74,7 +74,7 @@ async function _processFile(filePath, srcRelativePath, generatedDocRoot) {
             resolve();
             return;
         }
-        let extName = path.extname(srcRelativePath); // Eg. util/index.js
+        let extName = path.extname(srcRelativePath); // Eg. util/server.js
         const extensionIndex = srcRelativePath.lastIndexOf(extName);
         let markdownPath = srcRelativePath.substring(0, extensionIndex); // util/index
         markdownPath = `${generatedDocRoot}${markdownPath}${FILE_NAME_SUFFIX}.md`; // util/index.md

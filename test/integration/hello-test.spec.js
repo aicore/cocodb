@@ -14,7 +14,7 @@
 // jshint ignore: start
 /*global describe, it*/
 
-import helloWorld from "../../src/index.js";
+import helloWorld from "../../src/server.js";
 import * as assert from 'assert';
 import * as chai from 'chai';
 

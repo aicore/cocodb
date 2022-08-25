@@ -16,33 +16,20 @@
  *
  */
 
-// @INCLUDE_IN_API_DOCS
+import fastify from "fastify";
 
-/**
- * Write your module docs here. tell something about this module in markdown.
- *
- * See https://github.com/aicore/template-nodejs/wiki/How-To-Write-Docs for more details on how to style docs.
- * ### Use markdown headings!
- * and markdown code!
- * ```
- * // usage within core:
- * const Metrics = require("utils/Metrics");
- *
- * // usage within default extensions:
- * const Metrics = brackets.getModule("utils/Metrics");
- * ```
- *
- * @module hello
- */
+const server = fastify({logger: true});
+server.get('/', async function (request, reply) {
+    return {hello: 'world'};
+});
 
-/**
- * says hello world
- * @param name
- * @returns {string}
- * @type {function}
- */
-function helloWorld(name) {
-    return "Hello World " + name;
+async function start() {
+    try {
+        await server.listen({port: 3000});
+    } catch (err) {
+        fastify.log.error(err);
+        process.exit(1);
+    }
 }
 
-export default helloWorld;
+start();
