@@ -1,4 +1,5 @@
-# template-nodejs
+# CocoDb
+Document database using mysql
 A template project for nodejs. Has integrated linting, testing,
 coverage, reporting, GitHub actions for publishing to npm repository, dependency updates and other goodies.
 
