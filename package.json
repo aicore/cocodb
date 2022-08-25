@@ -1,8 +1,8 @@
 {
-  "name": "@aicore/template-nodejs",
-  "version": "1.0.6",
-  "description": "Template for nodejs with unit gulp build, test, coverage, code guardian, github and Other defaults",
-  "main": "src/index.js",
+  "name": "@aicore/cocodb",
+  "version": "1.0.1",
+  "description": "Simple json document database using mysql",
+  "main": "src/server.js",
   "type": "module",
   "keywords": [
     "template",
@@ -30,7 +30,8 @@
     "createJSDocs": "node build/jsDocGenerate.js src docs/generatedApiDocs && git add docs",
     "bumpPatchVersion": "npm --no-git-tag-version version patch",
     "bumpPatchVersionWithGitTag": "npm version patch",
-    "release": "npm run bumpPatchVersionWithGitTag"
+    "release": "npm run bumpPatchVersionWithGitTag",
+    "serve": "node src/server.js"
   },
   "files": [
     "src"
@@ -57,5 +58,7 @@
     "husky": "8.0.1",
     "mocha": "10.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "fastify": "4.5.2"
+  }
 }
