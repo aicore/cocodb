@@ -31,7 +31,8 @@
     "bumpPatchVersion": "npm --no-git-tag-version version patch",
     "bumpPatchVersionWithGitTag": "npm version patch",
     "release": "npm run bumpPatchVersionWithGitTag",
-    "serve": "node src/server.js"
+    "serve": "node src/server.js",
+    "serve:dev": "nodemon src/server.js"
   },
   "files": [
     "src"
@@ -56,11 +57,12 @@
     "eslint": "8.22.0",
     "glob": "8.0.3",
     "husky": "8.0.1",
-    "mocha": "10.0.0"
+    "mocha": "10.0.0",
+    "nodemon": "2.0.19"
   },
   "dependencies": {
-    "fastify": "4.5.2",
+    "@aicore/libcommonutils": "1.0.14",
     "@aicore/libmysql": "1.0.21",
-    "@aicore/libcommonutils": "1.0.14"
+    "fastify": "4.5.2"
   }
 }
