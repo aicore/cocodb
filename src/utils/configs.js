@@ -25,7 +25,15 @@ import {getMySqlConfigs} from "@aicore/libcommonutils";
 export function getConfigs() {
     const port = process.env.COCO_DB_PORT || '5000';
     const authKey = process.env.COCO_DB_AUTH_KEY || crypto.randomBytes(4).toString('hex');
-    const mySqlConfigs = getMySqlConfigs();
+    //const mySqlConfigs = getMySqlConfigs();
+    const mySqlConfigs = {
+        'host': 'localhost',
+        'port': '3306',
+        'database': 'testdb',
+        'user': 'root',
+        'password': '1234'
+
+    };
     return {
         port: port,
         authKey: authKey,

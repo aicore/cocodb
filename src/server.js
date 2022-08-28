@@ -17,19 +17,51 @@
  */
 
 import fastify from "fastify";
+import {getConfigs} from "./utils/configs.js";
+import {init} from "@aicore/libmysql";
+import {createTableRoute} from './api/createTable.js';
+import {isAuthenticated} from "./auth/auth.js";
 
-const server = fastify({logger: true});
+//const server = fastify({logger: true});
+const server = fastify();
+const configs = getConfigs();
+
 server.get('/', async function (request, reply) {
     return {hello: 'world'};
 });
 
-async function start() {
+
+server.register(createTableRoute);
+// Activate authentication
+server.addHook('onRequest', (request, reply, done) => {
+    if (!isAuthenticated(request, reply)) {
+        reply.code(402);
+        done(new Error('Wrong key'));
+    } else {
+        done();
+    }
+});
+
+async function initMysql() {
     try {
-        await server.listen({port: 3000});
-    } catch (err) {
-        fastify.log.error(err);
+
+        if (!init(configs.mySqlConfigs)) {
+            throw new Error('Exception occurred while connecting to DB');
+        }
+    } catch (e) {
+        fastify.log.error(e);
         process.exit(1);
     }
 }
 
-start();
+async function startServer() {
+    try {
+        await server.listen({port: configs.port});
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
+}
+
+startServer();
+initMysql();
