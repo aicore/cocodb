@@ -19,20 +19,15 @@
 import fastify from "fastify";
 import {getConfigs} from "./utils/configs.js";
 import {init} from "@aicore/libmysql";
-import {createTableRoute} from './api/createTable.js';
+import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {isAuthenticated} from "./auth/auth.js";
+import {hello} from "./api/hello.js";
 
 //const server = fastify({logger: true});
 const server = fastify();
 const configs = getConfigs();
 
-server.get('/', async function (request, reply) {
-    return {hello: 'world'};
-});
-
-
-server.register(createTableRoute);
-// Activate authentication
+/* Adding a authentication hook to the server. A hook is a function that is called when a request is made to the server. */
 server.addHook('onRequest', (request, reply, done) => {
     if (!isAuthenticated(request, reply)) {
         reply.code(402);
@@ -42,6 +37,23 @@ server.addHook('onRequest', (request, reply, done) => {
     }
 });
 
+
+
+
+/* root handler. It is a function that is called when a request is made to the server. */
+server.get('/', function (request, reply) {
+    return hello(request, reply);
+});
+/* Creating a route handler for the POST request to the /createTable endpoint. */
+server.post('/createTable', getCreatTableSchema(), function (request, reply) {
+    return createTable(request, reply);
+
+});
+
+
+/**
+ * It initializes the connection to the database
+ */
 async function initMysql() {
     try {
 
@@ -54,6 +66,9 @@ async function initMysql() {
     }
 }
 
+/**
+ * It starts the server and listens on the port specified in the configs
+ */
 async function startServer() {
     try {
         await server.listen({port: configs.port});

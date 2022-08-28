@@ -11,10 +11,10 @@ describe('unit Tests', function() {
         expect(configs.port).to.eql('5000');
         expect(configs.authKey.length).to.eql(8);
         expect(configs.mySqlConfigs.port).to.eql('3306');
-        expect(configs.mySqlConfigs.user.length).to.eql(9);
-        expect(configs.mySqlConfigs.password.length).to.eql(9);
-        expect(configs.mySqlConfigs.host.length).to.eql(9);
-        expect(configs.mySqlConfigs.database.length).to.eql(9);
+        expect(configs.mySqlConfigs.user.length).to.gt(0);
+        expect(configs.mySqlConfigs.password.length).to.gt(0);
+        expect(configs.mySqlConfigs.host.length).to.gt(0);
+        expect(configs.mySqlConfigs.database.length).to.gt(0);
 
     });
 
