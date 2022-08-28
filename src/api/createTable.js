@@ -1,6 +1,6 @@
 import {createTable as mysqlCreateTable} from "@aicore/libmysql";
 
-async function createTable(tableName, request, reply) {
+async function _createTable(tableName) {
     const response = {
         isSuccess: false
     };
@@ -43,16 +43,12 @@ const creatTableSchema = {
     }
 };
 
-function getCreatTableSchema() {
+export function getCreatTableSchema() {
     return creatTableSchema;
 }
 
-export async function createTableRoute(fastify, options) {
-    fastify.post('/createTable', creatTableSchema, async function (request, reply) {
-
-        const tableName = request.body.tableName;
-        const response = await createTable(tableName, request, reply);
-        return response;
-    });
-
+export async function createTable(request, reply) {
+    const tableName = request.body.tableName;
+    const response = await _createTable(tableName);
+    return response;
 }
