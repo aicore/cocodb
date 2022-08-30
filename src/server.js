@@ -22,6 +22,7 @@ import {init} from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
+import {getPutSchema} from "./api/put.js";
 
 //const server = fastify({logger: true});
 const server = fastify();
@@ -38,16 +39,15 @@ server.addHook('onRequest', (request, reply, done) => {
 });
 
 
-
-
 /* root handler. It is a function that is called when a request is made to the server. */
 server.get('/', function (request, reply) {
     return hello(request, reply);
 });
 /* Creating a route handler for the POST request to the /createTable endpoint. */
-server.post('/createTable', getCreatTableSchema(), function (request, reply) {
-    return createTable(request, reply);
-
+server.post('/createTable', getCreatTableSchema(), async function (request, reply) {
+    return await createTable(request, reply);
+});
+server.post('/put', getPutSchema(), async function (request, reply) {
 });
 
 

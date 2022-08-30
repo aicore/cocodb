@@ -10,13 +10,14 @@ async function _createTable(tableName) {
         response.isSuccess = isSuccess;
 
     } catch (e) {
-        response.errorMessage1 = `Exception occurred while creating table \n ${e}`;
+        response.errorMessage = `Exception occurred while creating table \n ${e}`;
         console.error(e);
     }
     return response;
 
 }
 
+// Refer https://json-schema.org/understanding-json-schema/index.html
 const creatTableSchema = {
     schema: {
         body: {
@@ -25,8 +26,8 @@ const creatTableSchema = {
             properties: {
                 tableName: {
                     type: 'string',
-                    "minLength": 1,
-                    "maxLength": 64
+                    minLength: 1,
+                    maxLength: 64
                 }
             }
         },
