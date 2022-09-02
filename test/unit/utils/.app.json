@@ -1,0 +1,11 @@
+{
+  "port": "5000",
+  "authKey": "YWxhZGRpbjpvcGVuc2VzYW1l",
+  "mysql": {
+    "host": "localhost",
+    "port": "3306",
+    "database": "testdb",
+    "user": "root",
+    "password": "1234"
+  }
+}
