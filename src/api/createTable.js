@@ -1,4 +1,7 @@
 import LibMySql from "@aicore/libmysql";
+import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
+
+const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
 
 async function _createTable(request, reply, tableName) {
     const response = {
@@ -10,7 +13,7 @@ async function _createTable(request, reply, tableName) {
         response.isSuccess = isSuccess;
 
     } catch (e) {
-        reply.code(400);
+        reply.code(BAD_REQUEST);
         response.errorMessage = `Exception occurred while creating table`;
         request.log.error(e);
     }
@@ -32,7 +35,7 @@ const creatTableSchema = {
             }
         },
         response: {
-            200: {
+            200: { //HTTP_STATUS_CODES.OK
                 type: 'object',
                 required: ['isSuccess'],
                 properties: {
@@ -40,7 +43,7 @@ const creatTableSchema = {
                     errorMessage: {type: 'string'}
                 }
             },
-            400: {
+            400: { //HTTP_STATUS_CODES.BAD_REQUEST
                 type: 'object',
                 required: ['isSuccess', 'errorMessage'],
                 properties: {
@@ -57,11 +60,7 @@ export function getCreatTableSchema() {
 }
 
 export async function createTable(request, reply) {
-    request.log.error('hello');
     const tableName = request.body.tableName;
     const response = await _createTable(request, reply, tableName);
-    if (!response.isSuccess) {
-        reply.code(400);
-    }
     return response;
 }

@@ -22,7 +22,7 @@ import LibMySql from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
-import {getPutSchema} from "./api/put.js";
+import {getPutSchema, putDocument} from "./api/put.js";
 
 const server = fastify({logger: true});
 //const server = fastify();
@@ -48,6 +48,7 @@ server.post('/createTable', getCreatTableSchema(), async function (request, repl
     return await createTable(request, reply);
 });
 server.post('/put', getPutSchema(), async function (request, reply) {
+    return await putDocument(request, reply);
 });
 
 
