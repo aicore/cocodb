@@ -1,7 +1,6 @@
 /*global describe, it*/
 import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
-import * as assert from 'assert';
 import * as chai from 'chai';
 import {createTable, getCreatTableSchema} from "../../../../src/api/createTable.js";
 
@@ -47,6 +46,7 @@ describe('unit test for createTable tests', function () {
         });
         expect(response.isSuccess).eql(false);
         expect(response.errorMessage).eql('Exception occurred while creating table');
+        LibMySql.createTable = saveExecute;
 
     });
     it('validate table schema', function () {

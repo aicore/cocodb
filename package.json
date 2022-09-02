@@ -62,7 +62,7 @@
     "sinon": "^14.0.0"
   },
   "dependencies": {
-    "@aicore/libcommonutils": "1.0.14",
+    "@aicore/libcommonutils": "1.0.15",
     "@aicore/libmysql": "1.0.22",
     "fastify": "4.5.2"
   }

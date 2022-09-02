@@ -1,4 +1,8 @@
 import LibMySql from "@aicore/libmysql";
+import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
+
+const OK = HTTP_STATUS_CODES.OK;
+const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
 
 // Refer https://json-schema.org/understanding-json-schema/index.html
 const putSchema = {
@@ -21,10 +25,16 @@ const putSchema = {
         response: {
             200: {
                 type: 'object',
-                required: ['isSuccess'],
+                required: ['documentId'],
                 properties: {
                     documentId: {type: 'string'},
-                    isSuccess: {type: 'boolean'},
+                    errorMessage: {type: 'string'}
+                }
+            },
+            400: {
+                type: 'object',
+                required: ['errorMessage'],
+                properties: {
                     errorMessage: {type: 'string'}
                 }
             }
@@ -41,7 +51,16 @@ export async function putDocument(request, reply) {
     const document = request.body.document;
     try {
         const documentId = await LibMySql.put(tableName, document);
+        const response = {
+            documentId: documentId
+        };
+        return response;
     } catch (e) {
-
+        const response = {
+            errorMessage: e.toString()
+        };
+        reply.code(HTTP_STATUS_CODES.BAD_REQUEST);
+        request.log.error(e);
+        return response;
     }
 }
