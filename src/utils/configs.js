@@ -1,6 +1,8 @@
 import * as crypto from "crypto";
 import {getMySqlConfigs} from "@aicore/libcommonutils";
+import * as fs from "fs";
 
+let APP_CONFIG = null;
 
 /**
  * It returns an object with the port, authKey, and mySqlConfigs
@@ -23,20 +25,20 @@ import {getMySqlConfigs} from "@aicore/libcommonutils";
  *         password :  The value of the environment variable MY_SQL_PASSWORD or a random hex string
  */
 export function getConfigs() {
-    const port = process.env.COCO_DB_PORT || '5000';
-    const authKey = process.env.COCO_DB_AUTH_KEY || crypto.randomBytes(4).toString('hex');
-    //const mySqlConfigs = getMySqlConfigs();
-    const mySqlConfigs = {
-        'host': 'localhost',
-        'port': '3306',
-        'database': 'testdb',
-        'user': 'root',
-        'password': '1234'
-
-    };
-    return {
-        port: port,
-        authKey: authKey,
-        mySqlConfigs: mySqlConfigs
-    };
+    if (APP_CONFIG) {
+        return APP_CONFIG;
+    }
+    if (!process.env.APP_CONFIG) {
+        throw new Error('Please provide valid app config file');
+    }
+    APP_CONFIG = _getAppConfig(process.env.APP_CONFIG);
+    APP_CONFIG.port = APP_CONFIG.port || '5000';
+    return APP_CONFIG;
 }
+
+function _getAppConfig(file) {
+    const appConfigFile = fs.readFileSync(file);
+    const appConfig = JSON.parse(appConfigFile.toString());
+    return appConfig;
+}
+
