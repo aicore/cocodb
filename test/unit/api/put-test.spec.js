@@ -1,9 +1,9 @@
 /*global describe, it*/
-import mockedFunctions from '../setup-mocks.js';
+import mockedFunctions from '../utils/setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
-import {putDocument, getPutSchema} from "../../../../src/api/put.js";
-import {hello} from "../../../../src/api/hello.js";
+import {putDocument, getPutSchema} from "../../../src/api/put.js";
+import {hello} from "../../../src/api/hello.js";
 
 let expect = chai.expect;
 describe('unit test for put api', function () {

@@ -58,7 +58,7 @@ server.post('/put', getPutSchema(), async function (request, reply) {
 async function initMysql() {
     try {
 
-        if (!LibMySql.init(configs.mySqlConfigs)) {
+        if (!LibMySql.init(configs.mysql)) {
             throw new Error('Exception occurred while connecting to DB');
         }
     } catch (e) {

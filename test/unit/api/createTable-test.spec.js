@@ -1,8 +1,8 @@
 /*global describe, it*/
-import mockedFunctions from '../setup-mocks.js';
+import mockedFunctions from '../utils/setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
-import {createTable, getCreatTableSchema} from "../../../../src/api/createTable.js";
+import {createTable, getCreatTableSchema} from "../../../src/api/createTable.js";
 
 let expect = chai.expect;
 describe('unit test for createTable tests', function () {
