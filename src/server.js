@@ -25,7 +25,7 @@ import {hello} from "./api/hello.js";
 import {getPutSchema, putDocument} from "./api/put.js";
 
 const server = fastify({logger: true});
-//const server = fastify();
+
 const configs = getConfigs();
 
 /* Adding a authentication hook to the server. A hook is a function that is called when a request is made to the server. */
@@ -44,11 +44,11 @@ server.get('/', function (request, reply) {
     return hello(request, reply);
 });
 /* Creating a route handler for the POST request to the /createTable endpoint. */
-server.post('/createTable', getCreatTableSchema(), async function (request, reply) {
-    return await createTable(request, reply);
+server.post('/createTable', getCreatTableSchema(), function (request, reply) {
+    return createTable(request, reply);
 });
-server.post('/put', getPutSchema(), async function (request, reply) {
-    return await putDocument(request, reply);
+server.post('/put', getPutSchema(), function (request, reply) {
+    return putDocument(request, reply);
 });
 
 
