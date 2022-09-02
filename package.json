@@ -58,8 +58,7 @@
     "glob": "8.0.3",
     "husky": "8.0.1",
     "mocha": "10.0.0",
-    "nodemon": "2.0.19",
-    "sinon": "^14.0.0"
+    "nodemon": "2.0.19"
   },
   "dependencies": {
     "@aicore/libcommonutils": "1.0.15",
