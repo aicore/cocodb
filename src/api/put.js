@@ -1,4 +1,4 @@
-import {put} from "@aicore/libmysql";
+import LibMySql from "@aicore/libmysql";
 
 // Refer https://json-schema.org/understanding-json-schema/index.html
 const putSchema = {
@@ -40,7 +40,7 @@ export async function putDocument(request, reply) {
     const tableName = request.body.tableName;
     const document = request.body.document;
     try {
-        const documentId = await put(tableName, document);
+        const documentId = await LibMySql.put(tableName, document);
     } catch (e) {
 
     }

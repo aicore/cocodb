@@ -18,14 +18,14 @@
 
 import fastify from "fastify";
 import {getConfigs} from "./utils/configs.js";
-import {init} from "@aicore/libmysql";
+import LibMySql from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
 import {getPutSchema} from "./api/put.js";
 
-//const server = fastify({logger: true});
-const server = fastify();
+const server = fastify({logger: true});
+//const server = fastify();
 const configs = getConfigs();
 
 /* Adding a authentication hook to the server. A hook is a function that is called when a request is made to the server. */
@@ -57,7 +57,7 @@ server.post('/put', getPutSchema(), async function (request, reply) {
 async function initMysql() {
     try {
 
-        if (!init(configs.mySqlConfigs)) {
+        if (!LibMySql.init(configs.mySqlConfigs)) {
             throw new Error('Exception occurred while connecting to DB');
         }
     } catch (e) {
