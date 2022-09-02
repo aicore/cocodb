@@ -9,12 +9,12 @@ describe('unit Tests', function() {
     it('getConfigShould pass', function () {
         const configs = getConfigs();
         expect(configs.port).to.eql('5000');
-        expect(configs.authKey.length).to.eql(8);
-        expect(configs.mySqlConfigs.port).to.eql('3306');
-        expect(configs.mySqlConfigs.user.length).to.gt(0);
-        expect(configs.mySqlConfigs.password.length).to.gt(0);
-        expect(configs.mySqlConfigs.host.length).to.gt(0);
-        expect(configs.mySqlConfigs.database.length).to.gt(0);
+        expect(configs.authKey.length).to.eql(24);
+        expect(configs.mysql.port).to.eql('3306');
+        expect(configs.mysql.user.length).to.gt(0);
+        expect(configs.mysql.password.length).to.gt(0);
+        expect(configs.mysql.host.length).to.gt(0);
+        expect(configs.mysql.database.length).to.gt(0);
 
     });
 
