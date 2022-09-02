@@ -1,5 +1,3 @@
-import * as crypto from "crypto";
-import {getMySqlConfigs} from "@aicore/libcommonutils";
 import * as fs from "fs";
 
 let APP_CONFIG = null;
