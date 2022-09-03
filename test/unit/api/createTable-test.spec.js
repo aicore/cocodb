@@ -45,7 +45,7 @@ describe('unit test for createTable tests', function () {
             }
         });
         expect(response.isSuccess).eql(false);
-        expect(response.errorMessage).eql('Exception occurred while creating table');
+        expect(response.errorMessage).eql('Error: error');
         LibMySql.createTable = saveExecute;
 
     });
