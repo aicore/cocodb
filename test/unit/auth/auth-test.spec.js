@@ -26,10 +26,10 @@ describe('unit tests for auth module', function () {
 
     });
     it('isAuthenticated should pass', function () {
-        init(getConfigs().authKey);
+        init('1');
         const authenticated = isAuthenticated({
             headers: {
-                authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l'
+                authorization: 'Basic 1'
             }
 
         }, {});
@@ -41,10 +41,10 @@ describe('unit tests for auth module', function () {
         expect(authenticated).eql(false);
     });
     it('isAuthenticated should fail', function () {
-        init(getConfigs().authKey);
+        init('1');
         const authenticated = isAuthenticated({
             headers: {
-                authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1'
+                authorization: 'Basic 10'
             }
 
         }, {});
@@ -52,10 +52,20 @@ describe('unit tests for auth module', function () {
     });
 
     it('isAuthenticated should fail if auth header has invalid entry', function () {
-        init(getConfigs().authKey);
+        init('1');
         const authenticated = isAuthenticated({
             headers: {
-                authorization: 'Basic YWxhZGRpbjpvcGVuc2VzYW1l 1234'
+                authorization: 'Basic 1 1234'
+            }
+
+        }, {});
+        expect(authenticated).eql(false);
+    });
+    it('isAuthenticated should fail if auth is not basic', function () {
+        init('1');
+        const authenticated = isAuthenticated({
+            headers: {
+                authorization: 'Advanced 1'
             }
 
         }, {});

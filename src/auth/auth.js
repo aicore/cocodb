@@ -19,6 +19,9 @@ export function isAuthenticated(request, _reply) {
     }
     const split = authHeader.trim().split(' ');
     if (split && split.length === 2) {
+        if (split[0] !== 'Basic') {
+            return false;
+        }
         const reqKey = split[1].trim();
         if (reqKey === key) {
             return true;
