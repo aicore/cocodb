@@ -20,9 +20,10 @@ import fastify from "fastify";
 import {getConfigs} from "./utils/configs.js";
 import LibMySql from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
-import {isAuthenticated} from "./auth/auth.js";
+import {init, isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
 import {getPutSchema, putDocument} from "./api/put.js";
+import {isString} from "@aicore/libcommonutils";
 
 const server = fastify({logger: true});
 
@@ -72,6 +73,7 @@ async function initMysql() {
  */
 async function startServer() {
     try {
+        init(configs.authKey);
         await server.listen({port: configs.port});
     } catch (err) {
         console.error(err);

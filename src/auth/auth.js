@@ -1,8 +1,19 @@
-const key = 'YWxhZGRpbjpvcGVuc2VzYW1l';
+import {isString} from "@aicore/libcommonutils";
 
-export function isAuthenticated(request, reply) {
-    console.log(JSON.stringify(request.headers));
-    const authHeader = request.headers['authorization'];
+let key = null;
+
+export function init(authKey) {
+    if (!isString(authKey)) {
+        throw new Error('please set authKey in config file');
+    }
+    key = authKey;
+}
+
+export function isAuthenticated(request, _reply) {
+    if (!request.headers) {
+        return false;
+    }
+    const authHeader = request.headers.authorization;
     if (!authHeader) {
         return false;
     }
