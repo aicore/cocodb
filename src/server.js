@@ -28,7 +28,8 @@ const server = fastify({logger: true});
 
 const configs = getConfigs();
 
-/* Adding a authentication hook to the server. A hook is a function that is called when a request is made to the server. */
+/* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
+the server. */
 server.addHook('onRequest', (request, reply, done) => {
     if (!isAuthenticated(request, reply)) {
         reply.code(402);

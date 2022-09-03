@@ -37,8 +37,7 @@ export function getConfigs() {
 
 function _getAppConfig(file) {
     const appConfigFile = fs.readFileSync(file);
-    const appConfig = JSON.parse(appConfigFile.toString());
-    return appConfig;
+    return JSON.parse(appConfigFile.toString());
 }
 
 export function deleteAppConfig() {
