@@ -13,7 +13,7 @@ async function _createTable(request, reply, tableName) {
 
     } catch (e) {
         reply.code(BAD_REQUEST);
-        response.errorMessage = `Exception occurred while creating table`;
+        response.errorMessage = e.toString();
         request.log.error(e);
     }
     return response;
