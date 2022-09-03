@@ -65,7 +65,7 @@ describe('unit tests for auth module', function () {
         init('1');
         const authenticated = isAuthenticated({
             headers: {
-                authorization: 'Advanced 1'
+                authorization: '123 1'
             }
 
         }, {});
