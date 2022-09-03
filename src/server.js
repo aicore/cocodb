@@ -23,7 +23,6 @@ import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {init, isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
 import {getPutSchema, putDocument} from "./api/put.js";
-import {isString} from "@aicore/libcommonutils";
 
 const server = fastify({logger: true});
 

@@ -26,3 +26,7 @@ export function isAuthenticated(request, _reply) {
     }
     return false;
 }
+
+export function getAuthKey() {
+    return key;
+}

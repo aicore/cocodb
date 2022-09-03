@@ -1,4 +1,4 @@
-import {isAuthenticated, init} from "../../../src/auth/auth.js";
+import {isAuthenticated, init, getAuthKey} from "../../../src/auth/auth.js";
 /*global describe, it*/
 
 import * as chai from 'chai';
@@ -9,7 +9,10 @@ let expect = chai.expect;
 describe('unit tests for auth module', function () {
 
     it('init should pass', function () {
-        init('1234');
+        const authKey = '1234';
+        init(authKey);
+        const key = getAuthKey();
+        expect(key).eql(authKey);
     });
     it('should throw exception if key is null', function () {
         let exceptionOccurred = false;
@@ -68,6 +71,5 @@ describe('unit tests for auth module', function () {
         }, {});
         expect(authenticated).eql(false);
     });
-
 
 });
