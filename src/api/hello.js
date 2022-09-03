@@ -1,3 +1,3 @@
-export function hello(request, reply) {
+export function hello(_request, _reply) {
     return { hello: 'world' };
 }

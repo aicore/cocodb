@@ -9,8 +9,7 @@ async function _createTable(request, reply, tableName) {
     };
     try {
         request.log.info(`tableName = ${tableName}`);
-        const isSuccess = await LibMySql.createTable(tableName);
-        response.isSuccess = isSuccess;
+        response.isSuccess = await LibMySql.createTable(tableName);
 
     } catch (e) {
         reply.code(BAD_REQUEST);
@@ -61,6 +60,5 @@ export function getCreatTableSchema() {
 
 export async function createTable(request, reply) {
     const tableName = request.body.tableName;
-    const response = await _createTable(request, reply, tableName);
-    return response;
+    return  _createTable(request, reply, tableName);
 }
