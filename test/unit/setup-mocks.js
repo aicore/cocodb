@@ -21,6 +21,13 @@ let mockedFunctions = {
             resolve(true);
         });
 
+    },
+    deleteTable: function (tableName) {
+        return new Promise(resolve => {
+            resolve( true);
+
+        });
+
     }
 };
 
@@ -32,6 +39,7 @@ function _setup() {
     LibMySql.createTable = mockedFunctions.createTable;
     LibMySql.put = mockedFunctions.put;
     LibMySql.deleteKey = mockedFunctions.deleteKey;
+    LibMySql.deleteTable = mockedFunctions.deleteTable;
     setupDone = true;
 }
 
