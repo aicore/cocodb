@@ -22,7 +22,10 @@ const deleteKeySchema = {
             }, 400: { //HTTP_STATUS_CODES.BAD_REQUEST
                 type: 'object', required: ['isSuccess', 'errorMessage'], properties: {
                     isSuccess: {type: 'boolean', default: false},
-                    errorMessage: {type: 'string'}
+                    errorMessage: {
+                        type: 'string',
+                        default: ""
+                    }
                 }
             }
         }

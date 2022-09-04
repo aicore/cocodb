@@ -47,7 +47,10 @@ const createTableSchema = {
                 required: ['isSuccess', 'errorMessage'],
                 properties: {
                     isSuccess: {type: 'boolean', default: false},
-                    errorMessage: {type: 'string'}
+                    errorMessage: {
+                        type: 'string',
+                        default: ""
+                    }
                 }
             }
         }
