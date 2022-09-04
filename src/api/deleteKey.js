@@ -17,10 +17,11 @@ const deleteKeySchema = {
         }, response: {
             200: { //HTTP_STATUS_CODES.OK
                 type: 'object', required: ['isSuccess'], properties: {
-                    isSuccess: {type: 'boolean'}, errorMessage: {type: 'string'}
+                    isSuccess: {type: 'boolean', default: false}, errorMessage: {type: 'string'}
                 }
             }, 400: { //HTTP_STATUS_CODES.BAD_REQUEST
                 type: 'object', required: ['isSuccess', 'errorMessage'], properties: {
+                    isSuccess: {type: 'boolean', default: false},
                     errorMessage: {type: 'string'}
                 }
             }

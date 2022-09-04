@@ -24,8 +24,13 @@ let mockedFunctions = {
     },
     deleteTable: function (tableName) {
         return new Promise(resolve => {
-            resolve( true);
+            resolve(true);
 
+        });
+    },
+    createIndexForJsonField: function (tableName, jsonfield, datatype, isUnique, isNull) {
+        return new Promise(resolve => {
+            resolve(true);
         });
 
     }
@@ -40,6 +45,7 @@ function _setup() {
     LibMySql.put = mockedFunctions.put;
     LibMySql.deleteKey = mockedFunctions.deleteKey;
     LibMySql.deleteTable = mockedFunctions.deleteTable;
+    LibMySql.createIndexForJsonField = mockedFunctions.createIndexForJsonField;
     setupDone = true;
 }
 
