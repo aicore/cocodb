@@ -26,6 +26,7 @@ import {getPutSchema, putDocument} from "./api/put.js";
 import {deleteKey, getDeleteKeySchema} from "./api/deleteKey.js";
 import {deleteTable, getDeleteTableSchema} from "./api/deleteTable.js";
 import {createIndex, getCreateIndexSchema} from "./api/createIndex.js";
+import {getUpdateSchema, update} from "./api/update.js";
 
 const server = fastify({logger: true});
 
@@ -63,6 +64,10 @@ server.post('/deleteTable', getDeleteTableSchema(), function (request, reply) {
 
 server.post('/createIndex', getCreateIndexSchema(), function (request, reply) {
     return createIndex(request, reply);
+});
+
+server.post('/update', getUpdateSchema(), function (request, reply) {
+    return update(request, reply);
 });
 
 

@@ -33,6 +33,11 @@ let mockedFunctions = {
             resolve(true);
         });
 
+    },
+    update: function (tableName, documentId, document) {
+        return new Promise(resolve => {
+            resolve(documentId);
+        });
     }
 };
 
@@ -46,6 +51,7 @@ function _setup() {
     LibMySql.deleteKey = mockedFunctions.deleteKey;
     LibMySql.deleteTable = mockedFunctions.deleteTable;
     LibMySql.createIndexForJsonField = mockedFunctions.createIndexForJsonField;
+    LibMySql.update = mockedFunctions.update;
     setupDone = true;
 }
 
