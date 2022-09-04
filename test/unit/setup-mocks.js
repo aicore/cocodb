@@ -38,6 +38,11 @@ let mockedFunctions = {
         return new Promise(resolve => {
             resolve(documentId);
         });
+    },
+    getFromNonIndex: function (tableName, queryObject) {
+        return new Promise(resolve => {
+            resolve([{1: '2'}]);
+        });
     }
 };
 
@@ -52,6 +57,7 @@ function _setup() {
     LibMySql.deleteTable = mockedFunctions.deleteTable;
     LibMySql.createIndexForJsonField = mockedFunctions.createIndexForJsonField;
     LibMySql.update = mockedFunctions.update;
+    LibMySql.getFromNonIndex = mockedFunctions.getFromNonIndex;
     setupDone = true;
 }
 

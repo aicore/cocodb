@@ -27,6 +27,7 @@ import {deleteKey, getDeleteKeySchema} from "./api/deleteKey.js";
 import {deleteTable, getDeleteTableSchema} from "./api/deleteTable.js";
 import {createIndex, getCreateIndexSchema} from "./api/createIndex.js";
 import {getUpdateSchema, update} from "./api/update.js";
+import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 
 const server = fastify({logger: true});
 
@@ -68,6 +69,9 @@ server.post('/createIndex', getCreateIndexSchema(), function (request, reply) {
 
 server.post('/update', getUpdateSchema(), function (request, reply) {
     return update(request, reply);
+});
+server.post('/getFromNonIndex', getFromNonIndexSchema(), function (request, reply) {
+    return getFromNonIndex(request, reply);
 });
 
 
