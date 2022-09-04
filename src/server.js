@@ -23,6 +23,7 @@ import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {init, isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
 import {getPutSchema, putDocument} from "./api/put.js";
+import {deleteKey, getDeleteKeySchema} from "./api/deleteKey.js";
 
 const server = fastify({logger: true});
 
@@ -50,6 +51,9 @@ server.post('/createTable', getCreatTableSchema(), function (request, reply) {
 });
 server.post('/put', getPutSchema(), function (request, reply) {
     return putDocument(request, reply);
+});
+server.post('/deleteDocument', getDeleteKeySchema(), function (request, reply) {
+    return deleteKey(request, reply);
 });
 
 
