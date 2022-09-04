@@ -20,7 +20,7 @@ const deleteKeySchema = {
                     isSuccess: {type: 'boolean'}, errorMessage: {type: 'string'}
                 }
             }, 400: { //HTTP_STATUS_CODES.BAD_REQUEST
-                type: 'object', required: ['errorMessage'], properties: {
+                type: 'object', required: ['isSuccess', 'errorMessage'], properties: {
                     errorMessage: {type: 'string'}
                 }
             }
