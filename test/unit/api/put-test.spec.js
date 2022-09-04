@@ -27,6 +27,7 @@ describe('unit test for put api', function () {
             }
         });
         expect(response.documentId).eql('12345');
+        expect(response.isSuccess).eql(true);
 
     });
     it('put document should throw error message in case of failure', async function () {
@@ -53,6 +54,7 @@ describe('unit test for put api', function () {
 
             }
         });
+        expect(response.isSuccess).eql(false);
         expect(response.errorMessage).eql('Error: error');
         LibMySql.put = saveExecute;
     });
@@ -62,7 +64,9 @@ describe('unit test for put api', function () {
         expect(schema.schema.body.required[0]).eql('tableName');
         expect(schema.schema.body.required[1]).eql('document');
         expect(schema.schema.response[200].required[0]).eql('documentId');
-        expect(schema.schema.response[400].required[0]).eql('errorMessage');
+        expect(schema.schema.response[200].required[1]).eql('isSuccess');
+        expect(schema.schema.response[400].required[0]).eql('isSuccess');
+        expect(schema.schema.response[400].required[1]).eql('errorMessage');
 
     });
     it('hello test', function () {
