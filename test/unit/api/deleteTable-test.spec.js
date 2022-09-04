@@ -2,17 +2,14 @@
 import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
-import {deleteKey, getDeleteKeySchema} from "../../../src/api/deleteKey.js";
+import {deleteTable, getDeleteTableSchema} from "../../../src/api/deleteTable.js";
 
 let expect = chai.expect;
-
-describe('unit test for delete key', function () {
-
-    it('deletekey should pass', async function () {
-        const response = await deleteKey({
+describe('Unit test for delete table', function () {
+    it('deleteTable should pass', async function () {
+        const response = await deleteTable({
             body: {
-                tableName: 'hello',
-                documentId: '123'
+                tableName: 'hello'
             },
             log: {
                 error: function (msg) {
@@ -27,14 +24,13 @@ describe('unit test for delete key', function () {
 
     });
     it('should fail', async function () {
-        const saveExecute = LibMySql.deleteKey;
-        LibMySql.deleteKey = async function (tableName, documentId) {
+        const saveExecute = LibMySql.deleteTable;
+        LibMySql.deleteTable = async function (tableName, documentId) {
             throw new Error('error');
         };
-        const response = await deleteKey({
+        const response = await deleteTable({
             body: {
-                tableName: 'hello',
-                documentId: '123'
+                tableName: 'hello'
             },
             log: {
                 error: function (msg) {
@@ -51,15 +47,15 @@ describe('unit test for delete key', function () {
         });
         expect(response.isSuccess).eql(false);
         expect(response.errorMessage).eql('Error: error');
-        LibMySql.deleteKey = saveExecute;
+        LibMySql.deleteTable = saveExecute;
 
     });
-    it('validate DeleteKeySchema', function () {
-        const schema = getDeleteKeySchema();
+    it('validate DeleteTableSchema', function () {
+        const schema = getDeleteTableSchema();
         expect(schema.schema.body.required[0]).eql('tableName');
-        expect(schema.schema.body.required[1]).eql('documentId');
         expect(schema.schema.response[200].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[1]).eql('errorMessage');
     });
+
 });

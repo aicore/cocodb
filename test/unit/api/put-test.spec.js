@@ -1,5 +1,5 @@
 /*global describe, it*/
-import mockedFunctions from '../../setup-mocks.js';
+import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
 import {putDocument, getPutSchema} from "../../../src/api/put.js";

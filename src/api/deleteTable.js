@@ -1,26 +1,10 @@
+// Refer https://json-schema.org/understanding-json-schema/index.html
 import LibMySql from "@aicore/libmysql";
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 
 const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
 
-async function _createTable(request, reply, tableName) {
-    const response = {
-        isSuccess: false
-    };
-    try {
-        request.log.info(`tableName = ${tableName}`);
-        response.isSuccess = await LibMySql.createTable(tableName);
-
-    } catch (e) {
-        reply.code(BAD_REQUEST);
-        response.errorMessage = e.toString();
-        request.log.error(e);
-    }
-    return response;
-}
-
-// Refer https://json-schema.org/understanding-json-schema/index.html
-const createTableSchema = {
+const deleteTableSchema = {
     schema: {
         body: {
             type: 'object',
@@ -54,11 +38,24 @@ const createTableSchema = {
     }
 };
 
-export function getCreatTableSchema() {
-    return createTableSchema;
+export function getDeleteTableSchema() {
+    return deleteTableSchema;
 }
 
-export async function createTable(request, reply) {
+export async function deleteTable(request, reply) {
     const tableName = request.body.tableName;
-    return  _createTable(request, reply, tableName);
+    try {
+        const isSuccess = await LibMySql.deleteTable(tableName);
+        return {
+            isSuccess: isSuccess
+        };
+    } catch (e) {
+        const response = {
+            isSuccess: false,
+            errorMessage: e.toString()
+        };
+        reply.code(BAD_REQUEST);
+        request.log.error(e);
+        return response;
+    }
 }
