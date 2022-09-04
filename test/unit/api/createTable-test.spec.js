@@ -51,9 +51,11 @@ describe('unit test for createTable tests', function () {
     });
     it('validate table schema', function () {
         const schema = getCreatTableSchema();
-        expect(schema.schema.body.type).eql('object');
-        expect(schema.schema.response[200].type).eql('object');
-        expect(schema.schema.response[400].type).eql('object');
+        expect(schema.schema.body.required[0]).eql('tableName');
+        expect(schema.schema.response[200].required[0]).eql('isSuccess');
+        expect(schema.schema.response[400].required[0]).eql('isSuccess');
+        expect(schema.schema.response[400].required[1]).eql('errorMessage');
+
     });
 });
 
