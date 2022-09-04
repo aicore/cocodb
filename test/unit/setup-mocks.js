@@ -43,6 +43,13 @@ let mockedFunctions = {
         return new Promise(resolve => {
             resolve([{1: '2'}]);
         });
+    },
+    get: function (tableName, documentId) {
+        return new Promise(resolve => {
+            resolve({
+                hello: 'world'
+            });
+        });
     }
 };
 
@@ -58,6 +65,7 @@ function _setup() {
     LibMySql.createIndexForJsonField = mockedFunctions.createIndexForJsonField;
     LibMySql.update = mockedFunctions.update;
     LibMySql.getFromNonIndex = mockedFunctions.getFromNonIndex;
+    LibMySql.get = mockedFunctions.get;
     setupDone = true;
 }
 

@@ -28,8 +28,9 @@ import {deleteTable, getDeleteTableSchema} from "./api/deleteTable.js";
 import {createIndex, getCreateIndexSchema} from "./api/createIndex.js";
 import {getUpdateSchema, update} from "./api/update.js";
 import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
+import {getSchema, get} from "./api/get.js";
 
-const server = fastify({logger: true});
+const server = fastify({logger: { level: 'debug' }});
 
 const configs = getConfigs();
 
@@ -49,6 +50,11 @@ server.addHook('onRequest', (request, reply, done) => {
 server.get('/', function (request, reply) {
     return hello(request, reply);
 });
+server.get('/get', getSchema(), async function (request, reply) {
+    const doc = await get(request, reply);
+    return doc;
+});
+
 /* Creating a route handler for the POST request to the /createTable endpoint. */
 server.post('/createTable', getCreatTableSchema(), function (request, reply) {
     return createTable(request, reply);

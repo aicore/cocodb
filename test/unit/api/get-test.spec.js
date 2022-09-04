@@ -2,15 +2,16 @@
 import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
-import {getFromNonIndex, getFromNonIndexSchema} from "../../../src/api/getFromNonIndex.js";
-
+import {get, getSchema} from "../../../src/api/get.js";
+import {getFromNonIndexSchema} from "../../../src/api/getFromNonIndex.js";
 let expect = chai.expect;
-describe('unit test for getFromNonIndex', function () {
-    it('should  pass', async function () {
-        const response = await getFromNonIndex({
-            body: {
+describe('unit test for get', function (){
+
+    it('should pass', async function () {
+        const response = await get({
+            query: {
                 tableName: 'hello',
-                queryObject: {hello: "world"}
+                documentId: '1235'
             },
             log: {
                 error: function (msg) {
@@ -25,20 +26,21 @@ describe('unit test for getFromNonIndex', function () {
 
             }
         });
-        expect(response.results.length).eql(1);
+        expect(response.document.hello).eql('world');
         expect(response.isSuccess).eql(true);
+
     });
 
-    it('getFromNonIndex should throw error message in case of failure', async function () {
-        const saveExecute = LibMySql.getFromNonIndex;
-        LibMySql.getFromNonIndex = async function (_tableName, _queryObject) {
+    it('get should throw error message in case of failure', async function () {
+        const saveExecute = LibMySql.get;
+        LibMySql.get = async function (_tableName, _docId) {
             throw new Error('error');
         };
 
-        const response = await getFromNonIndex({
-            body: {
+        const response = await get({
+            query: {
                 tableName: 'hello',
-                queryObject: {hello: "world"}
+                documentId: '1235'
             },
             log: {
                 error: function (msg) {
@@ -55,18 +57,17 @@ describe('unit test for getFromNonIndex', function () {
         });
         expect(response.isSuccess).eql(false);
         expect(response.errorMessage).eql('Error: error');
-        LibMySql.getFromNonIndex = saveExecute;
+        LibMySql.get = saveExecute;
     });
 
     it('validate schema', function () {
-        const schema = getFromNonIndexSchema();
-        expect(schema.schema.body.required[0]).eql('tableName');
-        expect(schema.schema.body.required[1]).eql('queryObject');
+        const schema = getSchema();
+        expect(schema.schema.querystring.required[0]).eql('tableName');
+        expect(schema.schema.querystring.required[1]).eql('documentId');
         expect(schema.schema.response[200].required[0]).eql('isSuccess');
-        expect(schema.schema.response[200].required[1]).eql('results');
+        expect(schema.schema.response[200].required[1]).eql('document');
         expect(schema.schema.response[400].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[1]).eql('errorMessage');
 
     });
-
 });
