@@ -4,7 +4,6 @@ import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 
 const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
 
-//NOSONAR
 const deleteTableSchema = {
     schema: {
         body: {
@@ -42,7 +41,7 @@ const deleteTableSchema = {
 export function getDeleteTableSchema() {
     return deleteTableSchema;
 }
-//NOSONAR
+
 export async function deleteTable(request, reply) {
     const tableName = request.body.tableName;
     try {
