@@ -38,7 +38,7 @@ const createTableSchema = {
                 type: 'object',
                 required: ['isSuccess'],
                 properties: {
-                    isSuccess: {type: 'boolean'},
+                    isSuccess: {type: 'boolean', default: false},
                     errorMessage: {type: 'string'}
                 }
             },
@@ -46,7 +46,7 @@ const createTableSchema = {
                 type: 'object',
                 required: ['isSuccess', 'errorMessage'],
                 properties: {
-                    isSuccess: {type: 'boolean'},
+                    isSuccess: {type: 'boolean', default: false},
                     errorMessage: {type: 'string'}
                 }
             }
@@ -60,5 +60,5 @@ export function getCreatTableSchema() {
 
 export async function createTable(request, reply) {
     const tableName = request.body.tableName;
-    return  _createTable(request, reply, tableName);
+    return _createTable(request, reply, tableName);
 }

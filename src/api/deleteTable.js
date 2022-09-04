@@ -30,7 +30,7 @@ const deleteTableSchema = {
                 type: 'object',
                 required: ['isSuccess', 'errorMessage'],
                 properties: {
-                    isSuccess: {type: 'boolean'},
+                    isSuccess: {type: 'boolean', default: false},
                     errorMessage: {type: 'string'}
                 }
             }
