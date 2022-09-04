@@ -58,14 +58,15 @@ describe('unit test for put api', function () {
     });
 
     it('put schema test', function () {
-        const  schema = getPutSchema();
-        expect(schema.schema.body.properties.tableName.type).eql('string');
-        expect(schema.schema.response["200"].required[0]).eql('documentId');
-        expect(schema.schema.response["400"].required[0]).eql('errorMessage');
+        const schema = getPutSchema();
+        expect(schema.schema.body.required[0]).eql('tableName');
+        expect(schema.schema.body.required[1]).eql('document');
+        expect(schema.schema.response[200].required[0]).eql('documentId');
+        expect(schema.schema.response[400].required[0]).eql('errorMessage');
 
     });
-    it('hello test', function (){
-        const response = hello({},{});
+    it('hello test', function () {
+        const response = hello({}, {});
         expect(response.hello).eql('world');
     });
 
