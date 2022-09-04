@@ -53,7 +53,10 @@ const createIndexSchema = {
                         type: 'boolean',
                         default: false
                     },
-                    errorMessage: {type: 'string'}
+                    errorMessage: {
+                        type: 'string',
+                        default: ""
+                    }
                 }
             }
         }
