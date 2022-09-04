@@ -22,16 +22,18 @@ const putSchema = {
         response: {
             200: {
                 type: 'object',
-                required: ['documentId'],
+                required: ['documentId', 'isSuccess'],
                 properties: {
                     documentId: {type: 'string'},
+                    isSuccess: {type: 'boolean'},
                     errorMessage: {type: 'string'}
                 }
             },
             400: {
                 type: 'object',
-                required: ['errorMessage'],
+                required: ['isSuccess', 'errorMessage'],
                 properties: {
+                    isSuccess: {type: 'boolean'},
                     errorMessage: {type: 'string'}
                 }
             }
@@ -49,10 +51,12 @@ export async function putDocument(request, reply) {
     try {
         const documentId = await LibMySql.put(tableName, document);
         return {
+            isSuccess: true,
             documentId: documentId
         };
     } catch (e) {
         const response = {
+            isSuccess: false,
             errorMessage: e.toString()
         };
         reply.code(HTTP_STATUS_CODES.BAD_REQUEST);
