@@ -29,6 +29,7 @@ import {createIndex, getCreateIndexSchema} from "./api/createIndex.js";
 import {getUpdateSchema, update} from "./api/update.js";
 import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 import {getSchema, get} from "./api/get.js";
+import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
 
 const server = fastify({logger: true});
 
@@ -77,6 +78,9 @@ server.post('/update', getUpdateSchema(), function (request, reply) {
 });
 server.post('/getFromNonIndex', getFromNonIndexSchema(), function (request, reply) {
     return getFromNonIndex(request, reply);
+});
+server.post('/getFromIndex', getFromIndexSchema(), function (request, reply) {
+    return getFromIndex(request, reply);
 });
 
 
