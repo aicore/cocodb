@@ -30,7 +30,7 @@ import {getUpdateSchema, update} from "./api/update.js";
 import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 import {getSchema, get} from "./api/get.js";
 
-const server = fastify({logger: { level: 'debug' }});
+const server = fastify({logger: true});
 
 const configs = getConfigs();
 
@@ -50,9 +50,8 @@ server.addHook('onRequest', (request, reply, done) => {
 server.get('/', function (request, reply) {
     return hello(request, reply);
 });
-server.get('/get', getSchema(), async function (request, reply) {
-    const doc = await get(request, reply);
-    return doc;
+server.get('/get', getSchema(), function (request, reply) {
+    return get(request, reply);
 });
 
 /* Creating a route handler for the POST request to the /createTable endpoint. */

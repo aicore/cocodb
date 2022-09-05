@@ -30,7 +30,9 @@ const schema = {
                         type: 'boolean',
                         default: false
                     },
-                    document: {type: 'object'},
+                    document: {type: 'object',
+                        additionalProperties: true
+                    },
                     errorMessage: {type: 'string'}
                 }
             },
