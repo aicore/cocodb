@@ -68,8 +68,6 @@ export async function get(request, reply) {
         const document = await LibMySql.get(tableName, documentId);
         response.isSuccess = true;
         response.document = document;
-        console.log(typeof response.document);
-        console.log(JSON.stringify(response));
         return response;
 
     } catch (e) {
