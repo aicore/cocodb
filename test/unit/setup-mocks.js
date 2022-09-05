@@ -50,6 +50,11 @@ let mockedFunctions = {
                 hello: 'world'
             });
         });
+    },
+    getFromIndex: function (tableName, queryObject) {
+        return new Promise(resolve => {
+            resolve([{1: '2'}]);
+        });
     }
 };
 
@@ -66,6 +71,7 @@ function _setup() {
     LibMySql.update = mockedFunctions.update;
     LibMySql.getFromNonIndex = mockedFunctions.getFromNonIndex;
     LibMySql.get = mockedFunctions.get;
+    LibMySql.getFromIndex = mockedFunctions.getFromIndex;
     setupDone = true;
 }
 
