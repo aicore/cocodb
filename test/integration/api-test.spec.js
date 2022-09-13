@@ -29,7 +29,6 @@ describe('Integration: Hello world Tests', function () {
         const configFile = process.cwd() + '/conf.json';
         fs.appendFileSync(configFile, JSON.stringify(configs));
         process.env.APP_CONFIG = configFile;
-        console.log(`${JSON.stringify(configs)}`);
         startDB();
         console.log('starting integ tests');
         init(`http://localhost:${configs.port}`, configs.authKey);
