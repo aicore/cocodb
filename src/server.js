@@ -120,6 +120,3 @@ export function startDB(){
     startServer(serverConfigs);
     initMysql(serverConfigs);
 }
-
-//startServer();
-//initMysql();
