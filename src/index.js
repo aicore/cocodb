@@ -1,4 +1,2 @@
-import {initMysql, startServer} from "./server.js";
-
-startServer();
-initMysql();
+import {startDB} from "./server.js";
+startDB();
