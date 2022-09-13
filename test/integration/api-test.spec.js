@@ -18,7 +18,7 @@ import * as assert from 'assert';
 import * as chai from 'chai';
 import {getConfigs} from "./setupIntegTest.js";
 import fs from "fs";
-import {initMysql, startServer, close} from "../../src/server.js";
+import {close, startDB} from "../../src/server.js";
 
 let expect = chai.expect;
 
@@ -29,8 +29,7 @@ describe('Integration: Hello world Tests', function () {
         fs.appendFileSync(configFile, JSON.stringify(configs));
         process.env.APP_CONFIG = configFile;
         console.log(`${JSON.stringify(configs)}`);
-        startServer();
-        initMysql();
+        startDB();
         console.log('starting integ tests');
     });
     after(function () {

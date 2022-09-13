@@ -33,7 +33,7 @@ import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
 
 const server = fastify({logger: true});
 
-const configs = getConfigs();
+
 
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
 the server. */
@@ -87,7 +87,7 @@ server.post('/getFromIndex', getFromIndexSchema(), function (request, reply) {
 /**
  * It initializes the connection to the database
  */
-export async function initMysql() {
+export async function initMysql(configs) {
     try {
 
         if (!LibMySql.init(configs.mysql)) {
@@ -102,7 +102,7 @@ export async function initMysql() {
 /**
  * It starts the server and listens on the port specified in the configs
  */
-export async function startServer() {
+export async function startServer(configs) {
     try {
         init(configs.authKey);
         await server.listen({port: configs.port});
@@ -114,6 +114,11 @@ export async function startServer() {
 export async function close() {
     await server.close();
     LibMySql.close();
+}
+export function startDB(){
+    const serverConfigs = getConfigs();
+    startServer(serverConfigs);
+    initMysql(serverConfigs);
 }
 
 //startServer();
