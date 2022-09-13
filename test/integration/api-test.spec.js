@@ -19,7 +19,7 @@ import * as chai from 'chai';
 import {getConfigs} from "./setupIntegTest.js";
 import fs from "fs";
 import {close, startDB} from "../../src/server.js";
-import {hello, init} from "@aicore/coco-db-client";
+import {createTable, deleteTable, hello, init} from "@aicore/coco-db-client";
 
 let expect = chai.expect;
 
@@ -43,6 +43,12 @@ describe('Integration: Hello world Tests', function () {
         it('test hello', async function () {
             const response = await hello();
             expect(response.hello).eql('world');
+        });
+        it('create table should pass', async function () {
+            let resp = await createTable('customers1');
+            expect(resp.isSuccess).eql(true);
+            resp = await deleteTable('customers1');
+            expect(resp.isSuccess).eql(true);
         });
     });
 });
