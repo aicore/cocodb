@@ -12,17 +12,34 @@
 
 // remove integration tests if you don't have them.
 // jshint ignore: start
-/*global describe, it*/
+/*global describe, it, before, after*/
 
 import * as assert from 'assert';
 import * as chai from 'chai';
+import {getConfigs} from "./setupIntegTest.js";
+import fs from "fs";
+import {initMysql, startServer, close} from "../../src/server.js";
 
 let expect = chai.expect;
 
-describe('Integration: Hello world Tests', function() {
+describe('Integration: Hello world Tests', function () {
+    before(async function () {
+        const configs = await getConfigs();
+        const configFile = process.cwd() + '/conf.json';
+        fs.appendFileSync(configFile, JSON.stringify(configs));
+        process.env.APP_CONFIG = configFile;
+        console.log(`${JSON.stringify(configs)}`);
+        startServer();
+        initMysql();
+        console.log('starting integ tests');
+    });
+    after(function () {
+        close();
+    });
 
-    describe('#indexOf()', function() {
-        it('should return -1 when the value is not present', function() {
+
+    describe('#indexOf()', function () {
+        it('should return -1 when the value is not present', function () {
             expect([1, 2, 3].indexOf(4)).to.equal(-1);
             assert.equal([1, 2, 3].indexOf(4), -1); // or this, but prefer the above syntax
         });

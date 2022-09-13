@@ -87,7 +87,7 @@ server.post('/getFromIndex', getFromIndexSchema(), function (request, reply) {
 /**
  * It initializes the connection to the database
  */
-async function initMysql() {
+export async function initMysql() {
     try {
 
         if (!LibMySql.init(configs.mysql)) {
@@ -102,7 +102,7 @@ async function initMysql() {
 /**
  * It starts the server and listens on the port specified in the configs
  */
-async function startServer() {
+export async function startServer() {
     try {
         init(configs.authKey);
         await server.listen({port: configs.port});
@@ -111,6 +111,10 @@ async function startServer() {
         process.exit(1);
     }
 }
+export async function close() {
+    await server.close();
+    LibMySql.close();
+}
 
-startServer();
-initMysql();
+//startServer();
+//initMysql();
