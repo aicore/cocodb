@@ -27,7 +27,7 @@ describe('Ut for getFromIndex', function () {
 
             }
         });
-        expect(response.results.length).eql(1);
+        expect(response.documents.length).eql(1);
         expect(response.isSuccess).eql(true);
     });
     it('getFromIndex should throw error message in case of failure', async function () {
