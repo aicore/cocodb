@@ -63,7 +63,7 @@ describe('unit test for getFromNonIndex', function () {
         expect(schema.schema.body.required[0]).eql('tableName');
         expect(schema.schema.body.required[1]).eql('queryObject');
         expect(schema.schema.response[200].required[0]).eql('isSuccess');
-        expect(schema.schema.response[200].required[1]).eql('results');
+        expect(schema.schema.response[200].required[1]).eql('documents');
         expect(schema.schema.response[400].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[1]).eql('errorMessage');
 

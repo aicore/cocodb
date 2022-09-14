@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 let config = null;
 
-/*
+
 config = {
     'host': 'localhost',
     'port': '3306',
@@ -11,7 +11,7 @@ config = {
     'user': 'root',
     'password': '1234'
 };
-*/
+
 async function _init() {
     if (!config) {
         config = await setUpMySQL();
