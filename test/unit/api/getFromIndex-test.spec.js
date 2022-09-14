@@ -66,7 +66,7 @@ describe('Ut for getFromIndex', function () {
         expect(schema.schema.response[400].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[1]).eql('errorMessage');
         expect(schema.schema.response[200].required[0]).eql('isSuccess');
-        expect(schema.schema.response[200].required[1]).eql('results');
+        expect(schema.schema.response[200].required[1]).eql('documents');
 
     });
 

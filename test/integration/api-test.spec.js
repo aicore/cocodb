@@ -19,7 +19,17 @@ import * as chai from 'chai';
 import {getConfigs} from "./setupIntegTest.js";
 import fs from "fs";
 import {close, startDB} from "../../src/server.js";
-import {createTable, deleteDocument, deleteTable, get, hello, init, put} from "@aicore/coco-db-client";
+import {
+    createIndex,
+    createTable,
+    deleteDocument,
+    deleteTable,
+    get,
+    getFromIndex,
+    hello,
+    init,
+    put
+} from "@aicore/coco-db-client";
 
 let expect = chai.expect;
 const CONFIG_FILE = process.cwd() + '/conf.json';
@@ -79,6 +89,62 @@ describe('Integration: Hello world Tests', function () {
             const delResp = await deleteDocument(TABLE_NAME, putResp.documentId);
             expect(delResp.isSuccess).eql(true);
 
+        });
+        it('createIndex should pass', async function () {
+            const document = {
+                id: '12345',
+                'lastName': 'Alice',
+                'Age': 100,
+                'active': true,
+                'location': {
+                    'city': 'Banglore',
+                    'state': 'Karnataka',
+                    'layout': {
+                        'block': '1stblock'
+                    }
+
+                }
+            };
+            const putResp = await put(TABLE_NAME, document);
+            expect(putResp.isSuccess).eql(true);
+            expect(putResp.documentId.length).gt(10);
+            const createIndexResp = await createIndex(TABLE_NAME, 'Age', 'INT');
+            expect(createIndexResp.isSuccess).eql(true);
+            const getFromIndexResp = await getFromIndex(TABLE_NAME, {
+                'Age': 100
+            });
+            expect(getFromIndexResp.isSuccess).eql(true);
+            expect(getFromIndexResp.documents[0].id).eql('12345');
+            expect(getFromIndexResp.documents[0].lastName).eql('Alice');
+            expect(getFromIndexResp.documents[0].Age).eql(100);
+            expect(getFromIndexResp.documents[0].location.city).eql('Banglore');
+            expect(getFromIndexResp.documents[0].location.state).eql('Karnataka');
+            expect(getFromIndexResp.documents[0].location.layout.block).eql('1stblock');
+        });
+        it('create unique index test', async function () {
+            const document = {
+                id: '12345',
+                'lastName': 'Alice',
+                'Age': 100,
+                'active': true,
+                'location': {
+                    'city': 'Banglore',
+                    'state': 'Karnataka',
+                    'layout': {
+                        'block': '1stblock'
+                    }
+
+                }
+            };
+            const putResp = await put(TABLE_NAME, document);
+            expect(putResp.isSuccess).eql(true);
+            const docId = putResp.documentId;
+            expect(docId.length).gt(10);
+            const createIndexResp = await createIndex(TABLE_NAME, 'id', 'VARCHAR(50)', true, true);
+            expect(createIndexResp.isSuccess).eql(true);
+            const newPutResp = await put(TABLE_NAME, document);
+            expect(newPutResp.isSuccess).eql(false);
+            expect(newPutResp.errorMessage).eql("Error: Duplicate entry '12345' for key 'customers.b80bb7740288fda1f201890375a60c8f'");
         });
     });
 });

@@ -23,13 +23,13 @@ const schema = {
         response: {
             200: { //HTTP_STATUS_CODES.OK
                 type: 'object',
-                required: ['isSuccess', 'results'],
+                required: ['isSuccess', 'documents'],
                 properties: {
                     isSuccess: {
                         type: 'boolean',
                         default: false
                     },
-                    results: {
+                    documents: {
                         type: 'array',
                         contains: {
                             type: 'object',
@@ -68,10 +68,10 @@ export async function getFromIndex(request, reply) {
     const tableName = request.body.tableName;
     const queryObject = request.body.queryObject;
     try {
-        const results = await LibMySql.getFromIndex(tableName, queryObject);
+        const documents = await LibMySql.getFromIndex(tableName, queryObject);
         return {
             isSuccess: true,
-            results: results
+            documents: documents
         };
     } catch (e) {
         const response = {

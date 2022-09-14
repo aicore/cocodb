@@ -22,13 +22,13 @@ const schema = {
         response: {
             200: { //HTTP_STATUS_CODES.OK
                 type: 'object',
-                required: ['isSuccess', 'results'],
+                required: ['isSuccess', 'documents'],
                 properties: {
                     isSuccess: {
                         type: 'boolean',
                         default: false
                     },
-                    results: {
+                    documents: {
                         type: 'array',
                         contains: {
                             type: 'object',
@@ -67,10 +67,10 @@ export async function getFromNonIndex(request, reply) {
     const tableName = request.body.tableName;
     const queryObject = request.body.queryObject;
     try {
-        const results = await LibMySql.getFromNonIndex(tableName, queryObject);
+        const documents = await LibMySql.getFromNonIndex(tableName, queryObject);
         return {
             isSuccess: true,
-            results: results
+            documents: documents
         };
     } catch (e) {
         const response = {
