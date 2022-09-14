@@ -25,7 +25,7 @@ describe('unit test for getFromNonIndex', function () {
 
             }
         });
-        expect(response.results.length).eql(1);
+        expect(response.documents.length).eql(1);
         expect(response.isSuccess).eql(true);
     });
 
