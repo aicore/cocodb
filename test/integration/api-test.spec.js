@@ -12,7 +12,7 @@
 
 // remove integration tests if you don't have them.
 // jshint ignore: start
-/*global describe, it, before, after, beforeEach*/
+/*global describe, it, before, after, beforeEach, afterEach*/
 
 import * as assert from 'assert';
 import * as chai from 'chai';
