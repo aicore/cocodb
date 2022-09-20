@@ -30,6 +30,7 @@ import {getUpdateSchema, update} from "./api/update.js";
 import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 import {getSchema, get} from "./api/get.js";
 import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
+import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 
 const server = fastify({logger: true});
 
@@ -39,7 +40,7 @@ const server = fastify({logger: true});
 the server. */
 server.addHook('onRequest', (request, reply, done) => {
     if (!isAuthenticated(request, reply)) {
-        reply.code(402);
+        reply.code(HTTP_STATUS_CODES.UNAUTHORIZED);
         done(new Error('Wrong key'));
     } else {
         done();
