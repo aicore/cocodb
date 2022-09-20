@@ -1,6 +1,6 @@
 {
   "name": "@aicore/cocodb",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple json document database using mysql",
   "main": "src/server.js",
   "type": "module",
