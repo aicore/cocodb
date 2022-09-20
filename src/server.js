@@ -105,7 +105,7 @@ export async function initMysql(configs) {
 export async function startServer(configs) {
     try {
         init(configs.authKey);
-        await server.listen({port: configs.port, host: configs.allowPublicAccess ? 'localhost' : '0.0.0.0'});
+        await server.listen({port: configs.port, host: configs.allowPublicAccess ? '0.0.0.0' : 'localhost'});
     } catch (err) {
         console.error(err);
         process.exit(1);
