@@ -35,7 +35,6 @@ import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 const server = fastify({logger: true});
 
 
-
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
 the server. */
 server.addHook('onRequest', (request, reply, done) => {
@@ -106,17 +105,19 @@ export async function initMysql(configs) {
 export async function startServer(configs) {
     try {
         init(configs.authKey);
-        await server.listen({port: configs.port});
+        await server.listen({port: configs.port, host: configs.allowPublicAccess ? 'localhost' : '0.0.0.0'});
     } catch (err) {
         console.error(err);
         process.exit(1);
     }
 }
+
 export async function close() {
     await server.close();
     LibMySql.close();
 }
-export function startDB(){
+
+export function startDB() {
     const serverConfigs = getConfigs();
     startServer(serverConfigs);
     initMysql(serverConfigs);
