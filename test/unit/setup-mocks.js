@@ -11,6 +11,18 @@ let mockedFunctions = {
         });
 
     },
+    createDataBase: function (tableName) {
+        return new Promise(resolve => {
+            resolve(true);
+        });
+
+    },
+    deleteDataBase: function (tableName) {
+        return new Promise(resolve => {
+            resolve(true);
+        });
+
+    },
     put: function (tableName, document) {
         return new Promise(resolve => {
             return resolve('12345');
@@ -72,6 +84,8 @@ function _setup() {
     LibMySql.getFromNonIndex = mockedFunctions.getFromNonIndex;
     LibMySql.get = mockedFunctions.get;
     LibMySql.getFromIndex = mockedFunctions.getFromIndex;
+    LibMySql.createDataBase = mockedFunctions.createDataBase;
+    LibMySql.deleteDataBase = mockedFunctions.deleteDataBase;
     setupDone = true;
 }
 
