@@ -35,8 +35,6 @@ import {createDb, getCreateDbSchema} from "./api/createdb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 
 const server = fastify({logger: true});
-
-
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
 the server. */
 server.addHook('onRequest', (request, reply, done) => {
@@ -124,8 +122,8 @@ export async function close() {
     LibMySql.close();
 }
 
-export function startDB() {
+export async function startDB() {
     const serverConfigs = getConfigs();
-    startServer(serverConfigs);
-    initMysql(serverConfigs);
+    await startServer(serverConfigs);
+    await initMysql(serverConfigs);
 }

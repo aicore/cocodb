@@ -5,7 +5,7 @@ let config = null;
 
 
 config = {
-    'host': '192.168.68.121',
+    'host': '192.168.68.125',
     'port': '3306',
     'user': 'cocouser',
     'password': 'toRSOmeORMEnt2@'

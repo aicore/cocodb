@@ -20,6 +20,8 @@ import {getConfigs} from "./setupIntegTest.js";
 import fs from "fs";
 import {close, startDB} from "../../src/server.js";
 import {
+    createDb,
+    deleteDb,
     createIndex,
     createTable,
     deleteDocument,
@@ -33,20 +35,23 @@ import {
 
 let expect = chai.expect;
 const CONFIG_FILE = process.cwd() + '/conf.json';
-const TABLE_NAME = 'customers';
+const DATABASE_NAME = 'test';
+const TABLE_NAME = DATABASE_NAME + '.customers';
 describe('Integration: Hello world Tests', function () {
     before(async function () {
         const configs = await getConfigs();
 
         fs.appendFileSync(CONFIG_FILE, JSON.stringify(configs));
         process.env.APP_CONFIG = CONFIG_FILE;
-        startDB();
+        await startDB();
         console.log('starting integ tests');
         init(`http://localhost:${configs.port}`, configs.authKey);
+        await createDb(DATABASE_NAME);
 
     });
-    after(function () {
+    after(async function () {
         fs.unlinkSync(CONFIG_FILE);
+        await deleteDb(DATABASE_NAME);
         close();
     });
     beforeEach(async function () {
@@ -61,6 +66,34 @@ describe('Integration: Hello world Tests', function () {
         it('test hello', async function () {
             const response = await hello();
             expect(response.hello).eql('world');
+        });
+        it('createDb and deleteDb should be successful', async function () {
+            const createDbResp = await createDb('hello');
+            expect(createDbResp.isSuccess).eql(true);
+            const deleteDbResp = await deleteDb('hello');
+            expect(deleteDbResp.isSuccess).eql(true);
+
+        });
+        it('createDb should fail to create same db twice', async function () {
+            let createDbResp = await createDb('hello');
+            expect(createDbResp.isSuccess).eql(true);
+
+            createDbResp = await createDb('hello');
+
+            expect(createDbResp.isSuccess).eql(false);
+            expect(createDbResp.errorMessage).eql("Error: Can't create database 'hello'; database exists");
+
+            const deleteDbResp = await deleteDb('hello');
+            expect(deleteDbResp.isSuccess).eql(true);
+
+
+        });
+        it('deletedb should fail to create same db twice', async function () {
+            let createDbResp = await deleteDb('hello');
+            expect(createDbResp.isSuccess).eql(false);
+            expect(createDbResp.errorMessage).eql("Error: Can't drop database 'hello'; database doesn't exist");
+
+
         });
         it('put and get and delete to table should pass', async function () {
             const document = {
