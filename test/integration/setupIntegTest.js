@@ -3,15 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 let config = null;
 
-/*
+
 config = {
-    'host': 'localhost',
+    'host': '192.168.68.121',
     'port': '3306',
-    'database': 'testdb',
-    'user': 'root',
-    'password': '1234'
+    'user': 'cocouser',
+    'password': 'toRSOmeORMEnt2@'
+
 };
-*/
+
 async function _init() {
     if (!config) {
         config = await setUpMySQL();
@@ -19,7 +19,6 @@ async function _init() {
 
     process.env.MY_SQL_SERVER = config.host;
     process.env.MY_SQL_SERVER_PORT = config.port;
-    process.env.MY_SQL_SERVER_DB = config.database;
     process.env.MY_SQL_USER = config.user;
     process.env.MY_SQL_PASSWORD = config.password;
     console.log(`${JSON.stringify(config)}`);

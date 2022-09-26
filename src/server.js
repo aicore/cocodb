@@ -31,6 +31,8 @@ import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 import {getSchema, get} from "./api/get.js";
 import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
+import {createDb, getCreateDbSchema} from "./api/createdb.js";
+import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 
 const server = fastify({logger: true});
 
@@ -82,7 +84,12 @@ server.post('/getFromNonIndex', getFromNonIndexSchema(), function (request, repl
 server.post('/getFromIndex', getFromIndexSchema(), function (request, reply) {
     return getFromIndex(request, reply);
 });
-
+server.post('/createDb', getCreateDbSchema(), function (request, reply) {
+    return createDb(request, reply);
+});
+server.post('/deleteDb', getDeleteDBSchema(), function (request, reply) {
+    return deleteDb(request, reply);
+});
 
 /**
  * It initializes the connection to the database
