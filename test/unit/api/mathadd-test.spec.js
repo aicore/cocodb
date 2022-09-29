@@ -12,7 +12,7 @@ describe('unit test for mathAdd', function () {
             body: {
                 tableName: 'hello',
                 documentId: '1235',
-                fieldsToIncrementMap: {
+                jsonFieldsIncrements: {
                     id: 1,
                     age: 2
                 }
@@ -44,7 +44,7 @@ describe('unit test for mathAdd', function () {
             body: {
                 tableName: 'hello',
                 documentId: '1235',
-                fieldsToIncrementMap: {
+                jsonFieldsIncrements: {
                     id: 1,
                     age: 2
                 }
@@ -71,7 +71,7 @@ describe('unit test for mathAdd', function () {
         const schema = getMathAddSchema();
         expect(schema.schema.body.required[0]).eql('tableName');
         expect(schema.schema.body.required[1]).eql('documentId');
-        expect(schema.schema.body.required[2]).eql('fieldsToIncrementMap');
+        expect(schema.schema.body.required[2]).eql('jsonFieldsIncrements');
         expect(schema.schema.response[200].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[0]).eql('isSuccess');
         expect(schema.schema.response[400].required[1]).eql('errorMessage');
