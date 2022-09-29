@@ -67,6 +67,12 @@ let mockedFunctions = {
         return new Promise(resolve => {
             resolve([{1: '2'}]);
         });
+    },
+    mathAdd: function (tableName, documentId, fieldsToIncrementMap) {
+        return new Promise(resolve => {
+            resolve(true);
+        });
+
     }
 };
 
@@ -86,6 +92,7 @@ function _setup() {
     LibMySql.getFromIndex = mockedFunctions.getFromIndex;
     LibMySql.createDataBase = mockedFunctions.createDataBase;
     LibMySql.deleteDataBase = mockedFunctions.deleteDataBase;
+    LibMySql.mathAdd = mockedFunctions.mathAdd;
     setupDone = true;
 }
 

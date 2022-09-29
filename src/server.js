@@ -33,6 +33,7 @@ import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 import {createDb, getCreateDbSchema} from "./api/createdb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
+import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 
 const server = fastify({logger: true});
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
@@ -87,6 +88,10 @@ server.post('/createDb', getCreateDbSchema(), function (request, reply) {
 });
 server.post('/deleteDb', getDeleteDBSchema(), function (request, reply) {
     return deleteDb(request, reply);
+});
+
+server.post('/mathAdd', getMathAddSchema(), function (request, reply) {
+    return mathAdd(request, reply);
 });
 
 /**
