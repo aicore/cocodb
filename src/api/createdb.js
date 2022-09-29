@@ -26,7 +26,7 @@ const createDbSchema = {
             type: 'object',
             required: ['databaseName'],
             properties: {
-                dataBaseName: {
+                databaseName: {
                     type: 'string',
                     minLength: 1,
                     maxLength: 63
