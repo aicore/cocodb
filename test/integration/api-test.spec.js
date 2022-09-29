@@ -226,8 +226,8 @@ describe('Integration: Hello world Tests', function () {
                     }
                 }
             });
-            expect(emptyResults.isSuccess).eql(true);
-            expect(emptyResults.documents.length).eql(0);
+            expect(emptyResults.isSuccess).eql(false);
+            expect(emptyResults.errorMessage).eql('unable to find documents for given documentId');
             const emptyObjectQueryResults = await getFromNonIndex(TABLE_NAME);
             expect(emptyObjectQueryResults.isSuccess).eql(true);
             expect(emptyObjectQueryResults.documents.length).eql(2);
