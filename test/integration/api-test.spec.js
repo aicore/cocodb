@@ -32,6 +32,7 @@ import {
     init,
     put, update
 } from "@aicore/coco-db-client";
+import {mathAdd} from "@aicore/coco-db-client/src/api/api.js";
 
 let expect = chai.expect;
 const CONFIG_FILE = process.cwd() + '/conf.json';
@@ -259,6 +260,32 @@ describe('Integration: Hello world Tests', function () {
         });
         it('make 1500 writes followed by read and delete', async function () {
             await writeAndReadFromDb(1500);
+        });
+        it('should be able to increment json field', async function () {
+            const docId = await put(TABLE_NAME, {age: 10, total: 100});
+            let incStatus = await mathAdd(TABLE_NAME, docId, {
+                age: 2,
+                total: 100
+            });
+            expect(incStatus).eql(true);
+            let modifiedDoc = await get(TABLE_NAME, docId);
+            expect(modifiedDoc.age).eql(12);
+            expect(modifiedDoc.total).eql(200);
+            incStatus = await mathAdd(TABLE_NAME, docId, {
+                age: 1
+            });
+            expect(incStatus).eql(true);
+            modifiedDoc = await get(TABLE_NAME, docId);
+            expect(modifiedDoc.age).eql(13);
+            expect(modifiedDoc.total).eql(200);
+            incStatus = await mathAdd(TABLE_NAME, docId, {
+                age: -2,
+                total: -300
+            });
+            expect(incStatus).eql(true);
+            modifiedDoc = await get(TABLE_NAME, docId);
+            expect(modifiedDoc.age).eql(11);
+            expect(modifiedDoc.total).eql(-100);
         });
 
     });
