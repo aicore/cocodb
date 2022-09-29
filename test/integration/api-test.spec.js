@@ -262,20 +262,23 @@ describe('Integration: Hello world Tests', function () {
             await writeAndReadFromDb(1500);
         });
         it('should be able to increment json field', async function () {
-            const docId = await put(TABLE_NAME, {age: 10, total: 100});
+            const putResp = await put(TABLE_NAME, {age: 10, total: 100});
+            const docId = putResp.documentId;
             let incStatus = await mathAdd(TABLE_NAME, docId, {
                 age: 2,
                 total: 100
             });
             expect(incStatus).eql(true);
-            let modifiedDoc = await get(TABLE_NAME, docId);
+            let getResponse = await get(TABLE_NAME, docId);
+            let modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(12);
             expect(modifiedDoc.total).eql(200);
             incStatus = await mathAdd(TABLE_NAME, docId, {
                 age: 1
             });
             expect(incStatus).eql(true);
-            modifiedDoc = await get(TABLE_NAME, docId);
+            getResponse = await get(TABLE_NAME, docId);
+            modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(13);
             expect(modifiedDoc.total).eql(200);
             incStatus = await mathAdd(TABLE_NAME, docId, {
@@ -283,7 +286,8 @@ describe('Integration: Hello world Tests', function () {
                 total: -300
             });
             expect(incStatus).eql(true);
-            modifiedDoc = await get(TABLE_NAME, docId);
+            getResponse = await get(TABLE_NAME, docId);
+            modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(11);
             expect(modifiedDoc.total).eql(-100);
         });
