@@ -228,6 +228,9 @@ describe('Integration: Hello world Tests', function () {
             });
             expect(emptyResults.isSuccess).eql(true);
             expect(emptyResults.documents.length).eql(0);
+            const emptyObjectQueryResults = await getFromNonIndex(TABLE_NAME);
+            expect(emptyObjectQueryResults.isSuccess).eql(true);
+            expect(emptyObjectQueryResults.documents.length).eql(2);
         });
 
         it('update document should pass', async function () {

@@ -6,7 +6,7 @@ const schema = {
     schema: {
         body: {
             type: 'object',
-            required: ['tableName', 'queryObject'],
+            required: ['tableName'],
             properties: {
                 tableName: {
                     type: 'string',
@@ -15,7 +15,7 @@ const schema = {
                 },
                 queryObject: {
                     type: 'object',
-                    minProperties: 1
+                    default: {}
                 }
             }
         },
