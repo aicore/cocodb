@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@aicore/libcommonutils": "1.0.16",
-    "@aicore/libmysql": "1.0.28",
+    "@aicore/libmysql": "1.0.29",
     "fastify": "4.6.0",
     "uuid": "9.0.0"
   }

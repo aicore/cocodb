@@ -292,6 +292,14 @@ describe('Integration: Hello world Tests', function () {
             expect(modifiedDoc.age).eql(11);
             expect(modifiedDoc.total).eql(-100);
             expect(modifiedDoc.abc).eql(10);
+
+            incStatus = await mathAdd(TABLE_NAME, '1', {
+                age: -2,
+                total: -300,
+                abc:10
+            });
+            expect(incStatus.isSuccess).eql(false);
+            expect(incStatus.errorMessage).eql('unable to find documentId');
         });
 
     });
