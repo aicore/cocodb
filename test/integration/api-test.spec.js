@@ -268,7 +268,7 @@ describe('Integration: Hello world Tests', function () {
                 age: 2,
                 total: 100
             });
-            expect(incStatus).eql(true);
+            expect(incStatus.isSuccess).eql(true);
             let getResponse = await get(TABLE_NAME, docId);
             let modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(12);
@@ -276,20 +276,22 @@ describe('Integration: Hello world Tests', function () {
             incStatus = await mathAdd(TABLE_NAME, docId, {
                 age: 1
             });
-            expect(incStatus).eql(true);
+            expect(incStatus.isSuccess).eql(true);
             getResponse = await get(TABLE_NAME, docId);
             modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(13);
             expect(modifiedDoc.total).eql(200);
             incStatus = await mathAdd(TABLE_NAME, docId, {
                 age: -2,
-                total: -300
+                total: -300,
+                abc:10
             });
-            expect(incStatus).eql(true);
+            expect(incStatus.isSuccess).eql(true);
             getResponse = await get(TABLE_NAME, docId);
             modifiedDoc = getResponse.document;
             expect(modifiedDoc.age).eql(11);
             expect(modifiedDoc.total).eql(-100);
+            expect(modifiedDoc.abc).eql(10);
         });
 
     });
