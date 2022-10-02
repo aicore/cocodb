@@ -35,7 +35,7 @@ import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 import {createDb, getCreateDbSchema} from "./api/createdb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
-import {initlialize} from "./ws/wsToHttp.js";
+import {initialize} from "./ws/wsToHttp.js";
 
 const server = fastify({logger: true});
 server.register(websocket, {
@@ -144,7 +144,7 @@ export async function close() {
 
 export async function startDB() {
     const serverConfigs = getConfigs();
-    initlialize(serverConfigs);
+    initialize(serverConfigs);
     await startServer(serverConfigs);
     await initMysql(serverConfigs);
 }

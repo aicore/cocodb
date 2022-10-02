@@ -1,9 +1,9 @@
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import {createDb, createTable, deleteDb, get, hello, put, init} from "@aicore/coco-db-client";
 
-export function initlialize(config) {
+export function initialize(config) {
 
-    init('http://localhost:' + config.port);
+    init('http://localhost:' + config.port, config.authKey);
 }
 
 export async function processesMessage(message) {
