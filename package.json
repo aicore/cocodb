@@ -60,13 +60,14 @@
     "husky": "8.0.1",
     "mocha": "10.0.0",
     "nodemon": "2.0.20",
-    "@aicore/libtestutils": "1.0.16",
-    "@aicore/coco-db-client": "1.0.10"
+    "@aicore/libtestutils": "1.0.16"
   },
   "dependencies": {
-    "@aicore/libcommonutils": "1.0.16",
+    "@aicore/coco-db-client": "1.0.10",
+    "@aicore/libcommonutils": "1.0.18",
     "@aicore/libmysql": "1.0.31",
     "fastify": "4.6.0",
-    "uuid": "9.0.0"
+    "uuid": "9.0.0",
+    "@fastify/websocket" :"7.0.1"
   }
 }
