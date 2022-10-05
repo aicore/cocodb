@@ -35,22 +35,25 @@ import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 import {createDb, getCreateDbSchema} from "./api/createdb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
-import {initialize} from "./ws/wsToHttp.js";
+import {processesMessage} from "./ws-api/wsToHttp.js";
 
 const server = fastify({logger: true});
 server.register(websocket, {
     options: {maxPayload: 1048576}
 });
 
+/* Registering a websocket handler. */
 server.register(async function (fastify) {
     fastify.get('/ws', {websocket: true}, (connection /* SocketStream */, req /* FastifyRequest */) => {
-        connection.socket.on('message', message => {
+        connection.socket.on('message', async message => {
             // message.toString() === 'hi from client'
+            const response = await processesMessage(JSON.parse(message));
             console.log(message.toString());
-            connection.socket.send(message.toString());
+            connection.socket.send(JSON.stringify(response));
         });
     });
 });
+
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
 the server. */
 server.addHook('onRequest', (request, reply, done) => {
@@ -144,7 +147,6 @@ export async function close() {
 
 export async function startDB() {
     const serverConfigs = getConfigs();
-    initialize(serverConfigs);
     await startServer(serverConfigs);
     await initMysql(serverConfigs);
 }
