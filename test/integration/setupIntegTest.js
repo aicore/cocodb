@@ -3,15 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 let config = null;
 
-/*
+
 config = {
-    'host': '192.168.68.125',
+    'host': '192.168.68.102',
     'port': '3306',
     'user': 'cocouser',
     'password': 'toRSOmeORMEnt2@'
 
 };
-*/
+
 async function _init() {
     if (!config) {
         config = await setUpMySQL();
