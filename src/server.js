@@ -35,7 +35,7 @@ import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 import {createDb, getCreateDbSchema} from "./api/createdb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
-import {processesMessage} from "./ws-api/wsToHttp.js";
+import {processesMessage} from "./ws-api/wsProcessor.js";
 
 const server = fastify({logger: true});
 server.register(websocket, {
