@@ -1,12 +1,9 @@
 /*global describe, it, before, after, beforeEach, afterEach*/
-import * as assert from 'assert';
 import * as chai from 'chai';
 import {
     cleanUp,
-    CONFIG_FILE,
     CONFIGS,
     DATABASE_NAME,
-    getConfigs,
     isServerStarted,
     TABLE_NAME
 } from "./setupIntegTest.js";
@@ -254,7 +251,7 @@ describe('Integration: ws end points', function () {
 
         });
         it('make 1500 writes followed by read and delete', async function () {
-            await writeAndReadFromDb(15000);
+            await writeAndReadFromDb(1500);
         });
         it('should be able to increment json field', async function () {
             const putResp = await put(TABLE_NAME, {age: 10, total: 100});
