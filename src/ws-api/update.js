@@ -1,7 +1,7 @@
 import {getUpdateSchema} from "../api/update.js";
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
-import {addSchema, VALIDATE, validate} from "./validator/validator.js";
+import {addSchema, VALIDATOR, validate} from "./validator/validator.js";
 
 addSchema(COCO_DB_FUNCTIONS.update, getUpdateSchema().schema);
 
@@ -10,7 +10,7 @@ export async function update(request) {
     const response = {
         isSuccess: false
     };
-    if (!validate(COCO_DB_FUNCTIONS.update, request, VALIDATE.REQUEST)) {
+    if (!validate(COCO_DB_FUNCTIONS.update, request, VALIDATOR.REQUEST)) {
         response.errorMessage = 'request Validation Failed';
         return response;
     }
@@ -21,7 +21,7 @@ export async function update(request) {
         const modifiedDocumentId = await LibMySql.update(tableName, documentId, document);
         response.isSuccess = true;
         response.documentId = modifiedDocumentId;
-        if (!validate(COCO_DB_FUNCTIONS.update, response, VALIDATE.RESPONSE_SUCCESS)) {
+        if (!validate(COCO_DB_FUNCTIONS.update, response, VALIDATOR.RESPONSE_SUCCESS)) {
             response.isSuccess = false;
             response.errorMessage = 'Unable to get valid data from DB';
         }
@@ -30,7 +30,7 @@ export async function update(request) {
     } catch (e) {
         console.error(e);
         response.errorMessage = e.toString();
-        if (!validate(COCO_DB_FUNCTIONS.update, response, VALIDATE.RESPONSE_FAIL)) {
+        if (!validate(COCO_DB_FUNCTIONS.update, response, VALIDATOR.RESPONSE_FAIL)) {
             response.errorMessage = response.errorMessage + " unable to validate the response schema";
         }
         return response;

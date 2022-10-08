@@ -18,7 +18,6 @@ import * as assert from 'assert';
 import * as chai from 'chai';
 import {cleanUp, CONFIG_FILE, CONFIGS, DATABASE_NAME, getConfigs, TABLE_NAME} from "./setupIntegTest.js";
 import fs from "fs";
-import {close, startDB} from "../../src/server.js";
 import {
     createDb,
     deleteDb,
