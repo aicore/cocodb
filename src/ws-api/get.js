@@ -27,12 +27,12 @@ export async function get(request) {
         return response;
 
     } catch (e) {
-        request.log.error(e);
+        console.error(e);
         response.errorMessage = e.toString();
         if (!validate(COCO_DB_FUNCTIONS.get, response, VALIDATE.RESPONSE_FAIL)) {
             response.errorMessage = response.errorMessage + " unable to validate the response schema";
         }
-        return response;
     }
+    return response;
 }
 

@@ -5,7 +5,7 @@ import {put} from "./put.js";
 import {createTable} from "./createTable.js";
 import {createDb} from "./createDb.js";
 import {deleteDb} from "./deleteDb.js";
-import {createIndex} from "../api/createIndex.js";
+import {createIndex} from "./createIndex.js";
 import {getFromNonIndex} from "./getFromNonIndex.js";
 import {getFromIndex} from "./getFromIndex.js";
 import {deleteDocument} from "./deleteKey.js";
@@ -20,9 +20,11 @@ import {update} from "./update.js";
  * @returns A promise that resolves to a message object.
  */
 export async function processesMessage(message) {
+//    console.log(JSON.stringify(message));
     const fn = message.fn;
     const returnMessage = {
-        id: message.id
+        id: message.id,
+        fn: message.fn
     };
     switch (fn) {
     case COCO_DB_FUNCTIONS.hello:

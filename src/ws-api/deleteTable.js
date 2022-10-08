@@ -3,7 +3,7 @@ import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema, VALIDATE, validate} from "./validator/validator.js";
 
-addSchema(COCO_DB_FUNCTIONS.createTable, getDeleteTableSchema().schema);
+addSchema(COCO_DB_FUNCTIONS.deleteTable, getDeleteTableSchema().schema);
 
 
 export async function deleteTable(request) {
@@ -25,7 +25,7 @@ export async function deleteTable(request) {
         return response;
 
     } catch (e) {
-        request.log.error(e);
+        console.error(e);
         response.errorMessage = e.toString();
         if (!validate(COCO_DB_FUNCTIONS.deleteTable, response, VALIDATE.RESPONSE_FAIL)) {
             response.errorMessage = response.errorMessage + " unable to validate the response schema";
