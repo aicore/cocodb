@@ -20,7 +20,6 @@ import {update} from "./update.js";
  * @returns A promise that resolves to a message object.
  */
 export async function processesMessage(message) {
-//    console.log(JSON.stringify(message));
     const fn = message.fn;
     const returnMessage = {
         id: message.id,
