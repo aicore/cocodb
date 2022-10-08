@@ -6,7 +6,7 @@ import {addSchema, VALIDATE, validate} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.createIndex, getCreateIndexSchema().schema);
 
 /* Getting a document from the database. */
-export async function createTable(request) {
+export async function createIndex(request) {
     const response = {
         isSuccess: false
     };
@@ -20,21 +20,22 @@ export async function createTable(request) {
     const isUnique = (request.isUnique) ? request.isUnique : false;
     const isNotNull = (request.isNotNull) ? request.isNotNull : false;
     try {
-        const isSuccess = await LibMySql.createIndexForJsonField(tableName, jsonField, dataType, isUnique, isNotNull);
-        response.isSuccess = isSuccess;
+
         if (!validate(COCO_DB_FUNCTIONS.createIndex, response, VALIDATE.RESPONSE_SUCCESS)) {
             response.isSuccess = false;
             response.errorMessage = 'Unable to get valid data from DB';
+            return response;
         }
-        return response;
+        response.isSuccess = await LibMySql.createIndexForJsonField(tableName, jsonField, dataType, isUnique, isNotNull);
+
 
     } catch (e) {
-        request.log.error(e);
+        console.error(e);
         response.errorMessage = e.toString();
         if (!validate(COCO_DB_FUNCTIONS.createIndex, response, VALIDATE.RESPONSE_FAIL)) {
             response.errorMessage = response.errorMessage + " unable to validate the response schema";
         }
-        return response;
     }
+    return response;
 }
 

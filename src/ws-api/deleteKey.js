@@ -3,7 +3,7 @@ import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema, VALIDATE, validate} from "./validator/validator.js";
 
-addSchema(COCO_DB_FUNCTIONS.delet, getDeleteKeySchema().schema);
+addSchema(COCO_DB_FUNCTIONS.deleteDocument, getDeleteKeySchema().schema);
 
 /* Getting a document from the database. */
 export async function deleteDocument(request) {
@@ -14,10 +14,10 @@ export async function deleteDocument(request) {
         response.errorMessage = 'request Validation Failed';
         return response;
     }
-    const databaseName = request.databaseName;
+    const tableName = request.tableName;
     const documentId = request.documentId;
     try {
-        const isSuccess = await LibMySql.deleteKey(databaseName, documentId);
+        const isSuccess = await LibMySql.deleteKey(tableName, documentId);
         response.isSuccess = isSuccess;
         if (!validate(COCO_DB_FUNCTIONS.deleteDocument, response, VALIDATE.RESPONSE_SUCCESS)) {
             response.isSuccess = false;

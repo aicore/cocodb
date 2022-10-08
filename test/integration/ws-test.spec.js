@@ -1,51 +1,42 @@
-// Testing framework: Mocha , assertion style: chai
-// See https://mochajs.org/#getting-started on how to write tests
-// Use chai for BDD style assertions (expect, should etc..). See move here: https://www.chaijs.com/guide/styles/#expect
-
-// Mocks and spies: sinon
-// if you want to mock/spy on fn() for unit tests, use sinon. refer docs: https://sinonjs.org/
-
-// Note on coverage suite used here:
-// we use c8 for coverage https://github.com/bcoe/c8. Its reporting is based on nyc, so detailed docs can be found
-// here: https://github.com/istanbuljs/nyc ; We didn't use nyc as it do not yet have ES module support
-// see: https://github.com/digitalbazaar/bedrock-test/issues/16 . c8 is drop replacement for nyc coverage reporting tool
-
-// remove integration tests if you don't have them.
-// jshint ignore: start
 /*global describe, it, before, after, beforeEach, afterEach*/
-
 import * as assert from 'assert';
 import * as chai from 'chai';
-import {cleanUp, CONFIG_FILE, CONFIGS, DATABASE_NAME, getConfigs, TABLE_NAME} from "./setupIntegTest.js";
-import fs from "fs";
-import {close, startDB} from "../../src/server.js";
 import {
-    createDb,
-    deleteDb,
-    createIndex,
-    createTable,
-    deleteDocument,
-    deleteTable,
-    get,
-    getFromIndex, getFromNonIndex,
-    hello,
-    init,
-    put, update
-} from "@aicore/coco-db-client";
-import {mathAdd} from "@aicore/coco-db-client/src/api/api.js";
+    cleanUp,
+    CONFIG_FILE,
+    CONFIGS,
+    DATABASE_NAME,
+    getConfigs,
+    isServerStarted,
+    TABLE_NAME
+} from "./setupIntegTest.js";
+import {createDb, createTable, deleteDb, deleteTable, init, hello} from "@aicore/cocodb-ws-client";
+import {
+    createIndex, deleteDocument, get, getFromIndex, getFromNonIndex, put, update,
+    mathAdd
+} from "@aicore/cocodb-ws-client";
+import {close as wsClose} from "@aicore/cocodb-ws-client";
 
 let expect = chai.expect;
-describe('Integration: http end point', function () {
-    before(async function () {
 
-        fs.appendFileSync(CONFIG_FILE, JSON.stringify(CONFIGS));
-        init(`http://localhost:${CONFIGS.port}`, CONFIGS.authKey);
+
+describe('Integration: ws end points', function () {
+    before(async function () {
+        //setNumberOfTestFiles(1);
+        await isServerStarted();
+
+        console.log('starting integ tests');
+        init(`localhost:${CONFIGS.port}`, CONFIGS.authKey);
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        await delay(1000);
         await createDb(DATABASE_NAME);
 
     });
     after(async function () {
         await deleteDb(DATABASE_NAME);
+        await wsClose();
         cleanUp();
+
     });
     beforeEach(async function () {
         await createTable(TABLE_NAME);
@@ -53,8 +44,6 @@ describe('Integration: http end point', function () {
     afterEach(async function () {
         await deleteTable(TABLE_NAME);
     });
-
-
     describe('#indexOf()', function () {
         it('test hello', async function () {
             const response = await hello();
@@ -85,6 +74,15 @@ describe('Integration: http end point', function () {
             let createDbResp = await deleteDb('hello');
             expect(createDbResp.isSuccess).eql(false);
             expect(createDbResp.errorMessage).eql("Error: Can't drop database 'hello'; database doesn't exist");
+
+
+        });
+        it('delete Table should pass', async function () {
+            const tableName = `${DATABASE_NAME}.abc`;
+            const createTableResp = await createTable(tableName);
+            expect(createTableResp.isSuccess).eql(true);
+            const deleteTableResp = await deleteTable(tableName);
+            expect(deleteTableResp.isSuccess).eql(true);
 
 
         });
@@ -135,7 +133,9 @@ describe('Integration: http end point', function () {
             expect(putResp.isSuccess).eql(true);
             expect(putResp.documentId.length).gt(10);
             const createIndexResp = await createIndex(TABLE_NAME, 'Age', 'INT');
+
             expect(createIndexResp.isSuccess).eql(true);
+
             const getFromIndexResp = await getFromIndex(TABLE_NAME, {
                 'Age': 100
             });
@@ -254,7 +254,7 @@ describe('Integration: http end point', function () {
 
         });
         it('make 1500 writes followed by read and delete', async function () {
-            await writeAndReadFromDb(1500);
+            await writeAndReadFromDb(15000);
         });
         it('should be able to increment json field', async function () {
             const putResp = await put(TABLE_NAME, {age: 10, total: 100});
@@ -279,7 +279,7 @@ describe('Integration: http end point', function () {
             incStatus = await mathAdd(TABLE_NAME, docId, {
                 age: -2,
                 total: -300,
-                abc:10
+                abc: 10
             });
             expect(incStatus.isSuccess).eql(true);
             getResponse = await get(TABLE_NAME, docId);
@@ -291,15 +291,13 @@ describe('Integration: http end point', function () {
             incStatus = await mathAdd(TABLE_NAME, '1', {
                 age: -2,
                 total: -300,
-                abc:10
+                abc: 10
             });
             expect(incStatus.isSuccess).eql(false);
             expect(incStatus.errorMessage).eql('unable to find documentId');
         });
-
     });
 });
-
 
 async function writeAndReadFromDb(numberOfTimes) {
     const document = {

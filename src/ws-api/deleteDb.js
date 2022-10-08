@@ -25,7 +25,7 @@ export async function deleteDb(request) {
         return response;
 
     } catch (e) {
-        request.log.error(e);
+        console.error(e);
         response.errorMessage = e.toString();
         if (!validate(COCO_DB_FUNCTIONS.deleteDb, response, VALIDATE.RESPONSE_FAIL)) {
             response.errorMessage = response.errorMessage + " unable to validate the response schema";
