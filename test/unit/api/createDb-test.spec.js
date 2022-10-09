@@ -2,7 +2,7 @@
 import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
-import {createDb, getCreateDbSchema} from "../../../src/api/createdb.js";
+import {createDb, getCreateDbSchema} from "../../../src/api/createDb.js";
 
 let expect = chai.expect;
 describe('unit test for create database tests', function () {
@@ -23,7 +23,7 @@ describe('unit test for create database tests', function () {
         expect(response.isSuccess).to.eql(true);
     });
     it('should fail', async function () {
-        const saveExecute = LibMySql.createTable;
+        const saveExecute = LibMySql.createDataBase;
         LibMySql.createDataBase = async function (tableName) {
             throw new Error('error');
         };

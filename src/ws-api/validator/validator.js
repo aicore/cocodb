@@ -7,17 +7,6 @@ export const AJV = new Ajv();
 /* A map that maps a function name to a validator object. */
 const FN_TO_VALIDATOR = {};
 
-/* An enum that is used to validate the request and response. */
-export const VALIDATOR = {
-    REQUEST: 0,
-    RESPONSE_SUCCESS: 1,
-    RESPONSE_FAIL: 2,
-    isPresent: function (value) {
-        return value >= 0 && value <= 2;
-
-    }
-};
-
 /**
  * It takes in a function name and a schema object and adds the schema to the apiToValidator object
  * @param{string} fn - The name of the function to be validated.
@@ -61,34 +50,50 @@ export function addSchema(fn, schema) {
     FN_TO_VALIDATOR[fn] = validator;
 }
 
+
 /**
- * It takes a function name, a request object, and a validation type, and returns true if the request object
- * is valid for the given function and validation type
- * @param {string} fn - The function name.
- * @param {object} request - the request object
- * @param {number} validator - This is a function that takes three parameters:
- * @returns {boolean} A boolean value.
+ * It checks if the function name is valid, and if it is, it checks if the request is valid
+ * @param fn - The function name.
+ * @param request - The request object that was sent to the server.
+ * @returns A function that takes two arguments, fn and request, and returns a boolean.
  */
-export function validate(fn, request, validator) {
+export function validateRequest(fn, request) {
     if (!(fn in COCO_DB_FUNCTIONS)) {
         return false;
     }
-    if (!isObject(request) || isObjectEmpty(request)) {
-        return false;
+    if (fn === COCO_DB_FUNCTIONS.hello) {
+        return true;
     }
-    if (!VALIDATOR.isPresent(validator)) {
+    if (!isObject(request) || isObjectEmpty(request)) {
         return false;
     }
     if (!isObject(FN_TO_VALIDATOR[fn])) {
         return false;
     }
-    switch (validator) {
-    case VALIDATOR.REQUEST:
-        return FN_TO_VALIDATOR[fn].requestValidator(request);
-    case VALIDATOR.RESPONSE_SUCCESS:
-        return FN_TO_VALIDATOR[fn].successValidator(request);
-    case VALIDATOR.RESPONSE_FAIL:
-        return FN_TO_VALIDATOR[fn].failureValidator(request);
+    return FN_TO_VALIDATOR[fn].requestValidator(request);
+}
+
+/**
+ * It checks that the response is an object, that it has a property called `isSuccess`, and that the value of `isSuccess`
+ * is a boolean. If `isSuccess` is true, it checks that the response has a property called `data` and that the value of
+ * `data` is an object. If `isSuccess` is false, it checks that the response has a property called `error` and that the
+ * value of `error` is a string
+ * @param fn - The function name that was called.
+ * @param response - The response object returned by the server.
+ * @returns A function that takes two arguments, fn and response.
+ */
+export function validateResponse(fn, response) {
+    if (!(fn in COCO_DB_FUNCTIONS)) {
+        return false;
     }
-    return false;
+    if (fn === COCO_DB_FUNCTIONS.hello) {
+        return true;
+    }
+    if (!isObject(response) || isObjectEmpty(response)) {
+        return false;
+    }
+    if (response.isSuccess) {
+        return FN_TO_VALIDATOR[fn].successValidator(response);
+    }
+    return FN_TO_VALIDATOR[fn].failureValidator(response);
 }
