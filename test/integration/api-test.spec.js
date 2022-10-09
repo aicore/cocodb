@@ -16,7 +16,7 @@
 
 import * as assert from 'assert';
 import * as chai from 'chai';
-import {cleanUp, CONFIG_FILE, CONFIGS, DATABASE_NAME, getConfigs, TABLE_NAME} from "./setupIntegTest.js";
+import {cleanUp, CONFIG_FILE, CONFIGS, DATABASE_NAME, getConfigs, initTest, TABLE_NAME} from "./setupIntegTest.js";
 import fs from "fs";
 import {
     createDb,
@@ -36,6 +36,7 @@ import {mathAdd} from "@aicore/coco-db-client/src/api/api.js";
 let expect = chai.expect;
 describe('Integration: http end point', function () {
     before(async function () {
+        await initTest();
 
         fs.appendFileSync(CONFIG_FILE, JSON.stringify(CONFIGS));
         init(`http://localhost:${CONFIGS.port}`, CONFIGS.authKey);
