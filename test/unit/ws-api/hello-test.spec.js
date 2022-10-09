@@ -15,7 +15,7 @@ describe('unit test for create database tests', function () {
     it('processMessage should pass', async function () {
         const resp = await processesMessage({
             fn: COCO_DB_FUNCTIONS.hello,
-            id: '1',
+            id: '1'
         });
         expect(resp.fn).eql(COCO_DB_FUNCTIONS.hello);
         expect(resp.id).eql('1');
