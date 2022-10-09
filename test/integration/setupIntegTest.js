@@ -12,7 +12,7 @@ export let CONFIGS = null;
 let isStarted = false;
 
 const resolves = [];
-
+/*
 config = {
     'host': '192.168.68.102',
     'port': '3306',
@@ -20,7 +20,7 @@ config = {
     'password': 'toRSOmeORMEnt2@'
 
 };
-
+*/
 async function _init() {
     if (!config) {
         config = await setUpMySQL();
@@ -38,7 +38,7 @@ export async function getMySqlConfigs() {
     await _init();
     return config;
 }
-/*
+
 export async function getConfigs() {
 
     return {
@@ -48,7 +48,7 @@ export async function getConfigs() {
     };
 
 }
-*/
+
 async function initTest() {
 
     CONFIGS = await getConfigs();
