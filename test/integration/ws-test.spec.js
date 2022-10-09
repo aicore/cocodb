@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import {
     cleanUp,
     CONFIGS,
-    DATABASE_NAME,
+    DATABASE_NAME, initTest,
     isServerStarted,
     TABLE_NAME
 } from "./setupIntegTest.js";
@@ -20,6 +20,7 @@ let expect = chai.expect;
 describe('Integration: ws end points', function () {
     before(async function () {
         //setNumberOfTestFiles(1);
+        await initTest();
         await isServerStarted();
 
         console.log('starting integ tests');
