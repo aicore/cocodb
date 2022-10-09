@@ -3,7 +3,6 @@ import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
 import * as chai from 'chai';
 import {getUpdateSchema, update} from "../../../src/api/update.js";
-import {getPutSchema} from "../../../src/api/put.js";
 
 let expect = chai.expect;
 describe('unit test for update test', function () {

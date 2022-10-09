@@ -37,7 +37,7 @@ export function addSchema(fn, schema) {
         throw new Error('Please provide valid responseSchema');
     }
     if (!schema.response["200"]) {
-        throw new Error('Please provide valid schema to report error');
+        throw new Error('Please provide valid schema to success');
     }
 
     const successSchema = schema.response["200"];
@@ -53,9 +53,9 @@ export function addSchema(fn, schema) {
 
 /**
  * It checks if the function name is valid, and if it is, it checks if the request is valid
- * @param fn - The function name.
- * @param request - The request object that was sent to the server.
- * @returns A function that takes two arguments, fn and request, and returns a boolean.
+ * @param {string} fn - The function name.
+ * @param{Object} request - The request object that was sent to the server.
+ * @returns {boolean} A function that takes two arguments, fn and request, and returns a boolean.
  */
 export function validateRequest(fn, request) {
     if (!(fn in COCO_DB_FUNCTIONS)) {
@@ -74,14 +74,13 @@ export function validateRequest(fn, request) {
 }
 
 /**
- * It checks that the response is an object, that it has a property called `isSuccess`, and that the value of `isSuccess`
- * is a boolean. If `isSuccess` is true, it checks that the response has a property called `data` and that the value of
- * `data` is an object. If `isSuccess` is false, it checks that the response has a property called `error` and that the
+ * It checks that the response is an object, that it has a property called `isSuccess`, and that the value of
+ * `isSuccess` is a boolean. If `isSuccess` is true, it checks that the response has a property called `data`
+ * and that the value of `data` is an object. If `isSuccess` is false, it checks that the response has a property
+ * called `error` and that the
  * value of `error` is a string
  * @param{string} fn - The function name that was called.
  * @param{Object} response - The response object returned by the server.
- * @param{string} response.fn - function name
- * @param {string} response.isSuccess - is the response is for success or failed request
  * @returns {boolean}
  */
 export function validateResponse(fn, response) {
@@ -94,8 +93,13 @@ export function validateResponse(fn, response) {
     if (!isObject(response) || isObjectEmpty(response)) {
         return false;
     }
-    if (response.isSuccess) {
-        return FN_TO_VALIDATOR[fn].successValidator(response);
+
+    if (!FN_TO_VALIDATOR[fn]) {
+        return false;
     }
-    return FN_TO_VALIDATOR[fn].failureValidator(response);
+    const validator = response.isSuccess ? FN_TO_VALIDATOR[fn].successValidator : FN_TO_VALIDATOR[fn].failureValidator;
+    if (!validator) {
+        return false;
+    }
+    return validator(response);
 }
