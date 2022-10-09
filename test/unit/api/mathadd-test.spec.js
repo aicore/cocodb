@@ -35,7 +35,7 @@ describe('unit test for mathAdd', function () {
     });
 
     it('get should throw error message in case of failure', async function () {
-        const saveExecute = LibMySql.get;
+        const saveExecute = LibMySql.mathAdd;
         LibMySql.mathAdd = async function (_tableName, _docId, _fieldsToIncrementMap) {
             throw new Error('error');
         };
