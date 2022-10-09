@@ -8,7 +8,7 @@ import {deleteDb} from "./deleteDb.js";
 import {createIndex} from "./createIndex.js";
 import {getFromNonIndex} from "./getFromNonIndex.js";
 import {getFromIndex} from "./getFromIndex.js";
-import {deleteDocument} from "./deleteKey.js";
+import {deleteDocument} from "./deleteDocument.js";
 import {deleteTable} from "./deleteTable.js";
 import {mathAdd} from "./mathadd.js";
 import {update} from "./update.js";
