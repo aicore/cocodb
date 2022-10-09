@@ -32,7 +32,7 @@ import {getFromNonIndex, getFromNonIndexSchema} from "./api/getFromNonIndex.js";
 import {getSchema, get} from "./api/get.js";
 import {getFromIndex, getFromIndexSchema} from "./api/getFromIndex.js";
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
-import {createDb, getCreateDbSchema} from "./api/createdb.js";
+import {createDb, getCreateDbSchema} from "./api/createDb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 import {processesMessage} from "./ws-api/wsProcessor.js";

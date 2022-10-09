@@ -38,7 +38,7 @@ export async function getMySqlConfigs() {
     await _init();
     return config;
 }
-
+/*
 export async function getConfigs() {
 
     return {
@@ -48,7 +48,7 @@ export async function getConfigs() {
     };
 
 }
-
+*/
 async function initTest() {
 
     CONFIGS = await getConfigs();

@@ -49,7 +49,7 @@ const createDbSchema = {
                     isSuccess: {type: 'boolean', default: false},
                     errorMessage: {
                         type: 'string',
-                        default: ""
+                        default: "Please provide valid parameters"
                     }
                 }
             }
