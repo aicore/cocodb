@@ -49,8 +49,10 @@ export async function getConfigs() {
 
 }
 
-async function initTest() {
-
+export async function initTest() {
+    if (isStarted){
+        return;
+    }
     CONFIGS = await getConfigs();
     fs.appendFileSync(CONFIG_FILE, JSON.stringify(CONFIGS));
     process.env.APP_CONFIG = CONFIG_FILE;
@@ -60,7 +62,11 @@ async function initTest() {
             resolve();
         }
     }, 5000);
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    await delay(5000); /// waiting 1 second.
+
     isStarted = true;
+
 
 }
 
@@ -74,7 +80,6 @@ export function isServerStarted() {
     });
 }
 
-initTest();
 
 let numberOfTestFiles = 2;
 
