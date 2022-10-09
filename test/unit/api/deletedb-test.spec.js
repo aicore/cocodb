@@ -46,7 +46,7 @@ describe('unit test for delete database tests', function () {
         });
         expect(response.isSuccess).eql(false);
         expect(response.errorMessage).eql('Error: error');
-        LibMySql.createDataBase = saveExecute;
+        LibMySql.deleteDataBase = saveExecute;
 
     });
     it('deleteDb schema', function () {

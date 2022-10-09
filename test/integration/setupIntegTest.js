@@ -65,14 +65,13 @@ async function initTest() {
 }
 
 export function isServerStarted() {
-    const promise = new Promise(resolve => {
+    return new Promise(resolve => {
         if (isStarted) {
             resolve();
             return;
         }
         resolves.push(resolve);
     });
-    return promise;
 }
 
 initTest();

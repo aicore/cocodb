@@ -12,8 +12,8 @@ export async function createDb(request) {
     const databaseName = request.databaseName;
     try {
         response.isSuccess = await LibMySql.createDataBase(databaseName);
-
     } catch (e) {
+        console.error(e);
         response.errorMessage = e.toString();
     }
     return response;

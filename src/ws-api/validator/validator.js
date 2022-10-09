@@ -78,9 +78,11 @@ export function validateRequest(fn, request) {
  * is a boolean. If `isSuccess` is true, it checks that the response has a property called `data` and that the value of
  * `data` is an object. If `isSuccess` is false, it checks that the response has a property called `error` and that the
  * value of `error` is a string
- * @param fn - The function name that was called.
- * @param response - The response object returned by the server.
- * @returns A function that takes two arguments, fn and response.
+ * @param{string} fn - The function name that was called.
+ * @param{Object} response - The response object returned by the server.
+ * @param{string} response.fn - function name
+ * @param {string} response.isSuccess - is the response is for success or failed request
+ * @returns {boolean}
  */
 export function validateResponse(fn, response) {
     if (!(fn in COCO_DB_FUNCTIONS)) {
