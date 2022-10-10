@@ -44,7 +44,7 @@ server.register(websocket, {
 
 /* Registering a websocket handler. */
 server.register(async function (fastify) {
-    fastify.get('/ws', {websocket: true}, (connection /* SocketStream */, _req /* FastifyRequest */) => {
+    fastify.get('/ws/', {websocket: true}, (connection /* SocketStream */, _req /* FastifyRequest */) => {
         connection.socket.on('message', async message => {
             const response = await processesMessage(JSON.parse(message));
             connection.socket.send(JSON.stringify(response));
