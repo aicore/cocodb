@@ -24,7 +24,7 @@ describe('Integration: ws end points', function () {
         await isServerStarted();
 
         console.log('starting integ tests');
-        init(`localhost:${CONFIGS.port}`, CONFIGS.authKey);
+        init(`ws://localhost:${CONFIGS.port}`, CONFIGS.authKey);
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         await delay(1000);
         await createDb(DATABASE_NAME);
