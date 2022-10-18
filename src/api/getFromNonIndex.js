@@ -29,15 +29,26 @@ const schema = {
                         default: false
                     },
                     documents: {
-                        type: 'array',
-                        contains: {
-                            type: 'object',
-                            minItems: 0
-                        },
-                        default: []
-
+                        anyOf: [{
+                            type: 'array',
+                            contains: {
+                                type: 'object',
+                                additionalProperties: true,
+                                minProperties: 0
+                            },
+                            default: []
+                        }, {
+                            type: 'array',
+                            default: [],
+                            minItems: 0,
+                            maxItems: 0
+                        }]
                     },
-                    errorMessage: {type: 'string'}
+
+                    errorMessage: {
+                        type: 'string'
+                    }
+
                 }
             },
             400: { //HTTP_STATUS_CODES.BAD_REQUEST
