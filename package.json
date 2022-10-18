@@ -65,8 +65,8 @@
     "nodemon": "2.0.20"
   },
   "dependencies": {
-    "@aicore/libcommonutils": "1.0.18",
-    "@aicore/libmysql": "1.0.33",
+    "@aicore/libcommonutils": "1.0.19",
+    "@aicore/libmysql": "1.0.34",
     "@fastify/websocket": "7.1.0",
     "ajv": "8.11.0",
     "fastify": "4.8.1",

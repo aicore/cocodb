@@ -13,6 +13,7 @@ import {deleteTable} from "./deleteTable.js";
 import {mathAdd} from "./mathadd.js";
 import {update} from "./update.js";
 import {validateRequest, validateResponse} from "./validator/validator.js";
+import {query} from "./query.js";
 
 
 /**
@@ -70,6 +71,9 @@ export async function processesMessage(message) {
             break;
         case  COCO_DB_FUNCTIONS.update:
             returnMessage.response = await update(message.request);
+            break;
+        case  COCO_DB_FUNCTIONS.query:
+            returnMessage.response = await query(message.request);
             break;
         default:
             returnMessage.response.isSuccess = false;
