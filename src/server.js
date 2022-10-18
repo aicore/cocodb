@@ -36,6 +36,7 @@ import {createDb, getCreateDbSchema} from "./api/createDb.js";
 import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 import {processesMessage} from "./ws-api/wsProcessor.js";
+import {getQuerySchema, query} from "./api/query.js";
 
 const server = fastify({logger: true});
 server.register(websocket, {
@@ -108,6 +109,9 @@ server.post('/deleteDb', getDeleteDBSchema(), function (request, reply) {
 
 server.post('/mathAdd', getMathAddSchema(), function (request, reply) {
     return mathAdd(request, reply);
+});
+server.post('/query', getQuerySchema(), function (request, reply) {
+    return query(request, reply);
 });
 
 /**
