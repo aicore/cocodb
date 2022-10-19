@@ -6,7 +6,7 @@ const querySchema = {
     schema: {
         body: {
             type: 'object',
-            required: ['tableName', 'document'],
+            required: ['tableName', 'queryString'],
             properties: {
                 tableName: {
                     type: 'string',
