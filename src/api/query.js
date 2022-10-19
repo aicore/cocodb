@@ -35,15 +35,21 @@ const querySchema = {
                         type: 'boolean',
                         default: false
                     },
-                    documents: {
-                        type: 'array',
-                        contains: {
-                            type: 'object',
-                            additionalProperties: true,
-                            minItems: 0
-                        },
-                        default: []
-
+                    documents:{
+                        anyOf: [{
+                            type: 'array',
+                            contains: {
+                                type: 'object',
+                                additionalProperties: true,
+                                minProperties: 0
+                            },
+                            default: []
+                        }, {
+                            type: 'array',
+                            default: [],
+                            minItems: 0,
+                            maxItems: 0
+                        }]
                     },
                     errorMessage: {type: 'string'}
                 }

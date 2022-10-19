@@ -10,7 +10,7 @@ import {
 import {createDb, createTable, deleteDb, deleteTable, init, hello} from "@aicore/cocodb-ws-client";
 import {
     createIndex, deleteDocument, get, getFromIndex, getFromNonIndex, put, update,
-    mathAdd
+    mathAdd, query
 } from "@aicore/cocodb-ws-client";
 import {close as wsClose} from "@aicore/cocodb-ws-client";
 
@@ -300,7 +300,52 @@ describe('Integration: ws end points', function () {
             expect(incStatus.isSuccess).eql(false);
             expect(incStatus.errorMessage).eql('unable to find documentId');
         });
+        it('integ tests for query', async function () {
+            const putResp = await put(TABLE_NAME, {age: 10, total: 100});
+            expect(putResp.isSuccess).eql(true);
+            const queryResp = await query(TABLE_NAME, '$.age = 10 and $.total = 100');
+            expect(queryResp.isSuccess).eql(true);
+            expect(queryResp.documents.length).eql(1);
+            expect(queryResp.documents[0].age).eql(10);
+            expect(queryResp.documents[0].total).eql(100);
+            const emptyResp = await query(TABLE_NAME, '$.Age = 10 and $.total = 100');
+            expect(emptyResp.isSuccess).eql(true);
+            expect(emptyResp.documents.length).eql(0);
+
+        });
+        it('query on index should pass', async function () {
+            const document = {
+                id: '12345',
+                'lastName': 'Alice',
+                'Age': 100,
+                'active': true,
+                'location': {
+                    'city': 'Bangalore',
+                    'state': 'Karnataka',
+                    'layout': {
+                        'block': '1stblock'
+                    }
+
+                }
+            };
+            const putResp = await put(TABLE_NAME, document);
+            expect(putResp.isSuccess).eql(true);
+            expect(putResp.documentId.length).gt(10);
+            const createIndexResp = await createIndex(TABLE_NAME, 'Age', 'INT');
+            expect(createIndexResp.isSuccess).eql(true);
+            const queryResp = await query(TABLE_NAME, "$.Age = 100 and $.location.city ='Bangalore'", ['Age']);
+            expect(queryResp.isSuccess).eql(true);
+            expect(queryResp.documents.length).eql(1);
+            expect(queryResp.documents[0].id).eql('12345');
+            expect(queryResp.documents[0].Age).eql(100);
+            expect(queryResp.documents[0].active).eql(true);
+            expect(queryResp.documents[0].location.city).eql('Bangalore');
+            expect(queryResp.documents[0].location.state).eql('Karnataka');
+            expect(queryResp.documents[0].location.layout.block).eql('1stblock');
+
+        });
     });
+
 });
 
 async function writeAndReadFromDb(numberOfTimes) {
@@ -342,6 +387,17 @@ async function writeAndReadFromDb(numberOfTimes) {
         expect(result.document.location.state).eql('Karnataka');
         expect(result.document.location.layout.block).eql('1stblock');
     });
+
+    const queryResp = await query(TABLE_NAME, "$.lastName = 'Alice'");
+    expect(queryResp.isSuccess).eql(true);
+    expect(queryResp.documents.length).eql(numberOfTimes <= 1000 ? numberOfTimes : 1000);
+    for (const result of queryResp.documents) {
+        expect(result.lastName).eql('Alice');
+        expect(result.Age).eql(100);
+        expect(result.location.city).eql('Banglore');
+        expect(result.location.state).eql('Karnataka');
+        expect(result.location.layout.block).eql('1stblock');
+    }
 
     const deletePromises = [];
     putResults.forEach(result => {
