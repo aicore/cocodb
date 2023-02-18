@@ -228,7 +228,7 @@ describe('Integration: ws end points', function () {
         expect(emptyObjectQueryResults.documents.length).eql(2);
     });
 
-    it('getFromNonIndex test should oaginate and pass', async function () {
+    it('getFromNonIndex test should paginate and pass', async function () {
         const document = {
             id: '12345',
             'lastName': 'Alice',
@@ -254,10 +254,10 @@ describe('Integration: ws end points', function () {
                 layout: {
                     block: '1stblock'
                 }
-            }, options: {
-                pageOffset: 0,
-                pageLimit: 10
             }
+        }, {
+            pageOffset: 0,
+            pageLimit: 10
         });
         expect(scanResults.isSuccess).eql(true);
         expect(scanResults.documents.length).eql(10);
@@ -269,10 +269,10 @@ describe('Integration: ws end points', function () {
                 layout: {
                     block: '1stblock'
                 }
-            }, options: {
-                pageOffset: 9,
-                pageLimit: 10
             }
+        }, {
+            pageOffset: 9,
+            pageLimit: 10
         });
 
         expect(scanResults.isSuccess).eql(true);
