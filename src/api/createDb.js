@@ -8,7 +8,6 @@ async function _createDatabase(request, reply, databaseName) {
         isSuccess: false
     };
     try {
-        request.log.info(` = ${databaseName}`);
         response.isSuccess = await LibMySql.createDataBase(databaseName);
 
     } catch (e) {

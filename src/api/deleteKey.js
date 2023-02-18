@@ -44,7 +44,6 @@ export async function deleteKey(request, reply) {
         isSuccess: false
     };
     try {
-        request.log.info(`tableName = ${tableName} documentID =${documentId}`);
         response.isSuccess = await LibMySql.deleteKey(tableName, documentId);
 
     } catch (e) {

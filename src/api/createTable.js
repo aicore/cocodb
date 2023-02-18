@@ -8,7 +8,6 @@ async function _createTable(request, reply, tableName) {
         isSuccess: false
     };
     try {
-        request.log.info(`tableName = ${tableName}`);
         response.isSuccess = await LibMySql.createTable(tableName);
 
     } catch (e) {
