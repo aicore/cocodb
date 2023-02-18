@@ -53,6 +53,27 @@ describe('unit test for create database tests', function () {
         expect(resp.response.isSuccess).eql(true);
         expect(resp.response.documents[0][1]).eql('2');
     });
+
+    it('processMessage should fail for getFromNonIndex if invalid options passed', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.getFromNonIndex,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                queryObject: {
+                    hello: 'world'
+                },
+                options: {
+                    pageOffset: "string should fail"
+                }
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.getFromNonIndex);
+        expect(resp.id).eql('1');
+        expect(resp.response.isSuccess).eql(false);
+        expect(resp.response.errorMessage).eql('request validation Failed');
+    });
+
     it('getFromNonIndex processMessage should fail if required parameters are missing name', async function () {
         const resp = await processesMessage({
             fn: COCO_DB_FUNCTIONS.getFromNonIndex,

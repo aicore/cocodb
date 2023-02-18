@@ -67,6 +67,26 @@ describe('unit test for create database tests', function () {
         expect(resp.response.errorMessage).eql('request validation Failed');
     });
 
+    it('getFromIndex processMessage should fail if invalid parameters for options', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.getFromIndex,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                queryObject: {
+                    hello: 'world'
+                },
+                options: {
+                    pageOffset: "string should fail"
+                }
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.getFromIndex);
+        expect(resp.id).eql('1');
+        expect(resp.response.isSuccess).eql(false);
+        expect(resp.response.errorMessage).eql('request validation Failed');
+    });
+
     it('processMessage should fail if response validation fails for getFromIndex api', async function () {
         const saveExecute = LibMySql.getFromIndex;
         LibMySql.getFromIndex = async function (_tableName, _queryObject) {

@@ -23,6 +23,18 @@ const querySchema = {
                         type: 'string'
                     },
                     default: []
+                },
+                options: {
+                    type: 'object',
+                    default: {},
+                    properties: {
+                        pageOffset: {
+                            type: 'integer'
+                        },
+                        pageLimit: {
+                            type: 'integer'
+                        }
+                    }
                 }
             }
         },
@@ -80,8 +92,9 @@ export async function query(request, reply) {
     const tableName = request.body.tableName;
     const queryString = request.body.queryString;
     const useIndexForFields = request.body.useIndexForFields;
+    const options = request.body.options;
     try {
-        const documents = await LibMySql.query(tableName, queryString, useIndexForFields);
+        const documents = await LibMySql.query(tableName, queryString, useIndexForFields, options);
         return {
             isSuccess: true,
             documents: documents
