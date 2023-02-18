@@ -228,6 +228,58 @@ describe('Integration: ws end points', function () {
         expect(emptyObjectQueryResults.documents.length).eql(2);
     });
 
+    it('getFromNonIndex test should oaginate and pass', async function () {
+        const document = {
+            id: '12345',
+            'lastName': 'Alice',
+            'Age': 100,
+            'active': true,
+            'location': {
+                'city': 'Banglore',
+                'state': 'Karnataka',
+                'layout': {
+                    'block': '1stblock'
+                }
+
+            }
+        };
+        let putPromises = [];
+        for (let i=0; i<100; i++){
+            document.counter = i;
+            putPromises.push(put(TABLE_NAME, document));
+        }
+        await Promise.all(putPromises);
+        let scanResults = await getFromNonIndex(TABLE_NAME, {
+            location: {
+                layout: {
+                    block: '1stblock'
+                }
+            }, options: {
+                pageOffset: 0,
+                pageLimit: 10
+            }
+        });
+        expect(scanResults.isSuccess).eql(true);
+        expect(scanResults.documents.length).eql(10);
+        let lastDocCounter = scanResults.documents[9].counter;
+        expect(scanResults.documents[9].counter).not.eql(scanResults.documents[8].counter);
+
+        scanResults = await getFromNonIndex(TABLE_NAME, {
+            location: {
+                layout: {
+                    block: '1stblock'
+                }
+            }, options: {
+                pageOffset: 9,
+                pageLimit: 10
+            }
+        });
+
+        expect(scanResults.isSuccess).eql(true);
+        expect(scanResults.documents.length).eql(10);
+        expect(lastDocCounter).eql(scanResults.documents[0].counter);
+    });
+
     it('update document should pass', async function () {
         const document = {
             id: '12345',
