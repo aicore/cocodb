@@ -12,8 +12,9 @@ export async function getFromIndex(request) {
     };
     const tableName = request.tableName;
     const queryObject = request.queryObject;
+    const options = request.options;
     try {
-        const documents = await LibMySql.getFromIndex(tableName, queryObject);
+        const documents = await LibMySql.getFromIndex(tableName, queryObject, options);
         response.isSuccess = true;
         response.documents = documents;
 

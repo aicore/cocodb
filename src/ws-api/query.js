@@ -13,8 +13,9 @@ export async function query(request) {
     const tableName = request.tableName;
     const queryString = request.queryString;
     const useIndexForFields = request.useIndexForFields;
+    const options = request.options;
     try {
-        const documents = await LibMySql.query(tableName, queryString, useIndexForFields);
+        const documents = await LibMySql.query(tableName, queryString, useIndexForFields, options);
         response.isSuccess = true;
         response.documents = documents;
 
