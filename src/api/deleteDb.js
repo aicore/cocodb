@@ -8,7 +8,6 @@ async function _deleteDatabase(request, reply, databaseName) {
         isSuccess: false
     };
     try {
-        request.log.info(` = ${databaseName}`);
         response.isSuccess = await LibMySql.deleteDataBase(databaseName);
 
     } catch (e) {
