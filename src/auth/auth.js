@@ -14,7 +14,6 @@ export function isAuthenticated(request, _reply) {
         return false;
     }
     const authHeader = request.headers.authorization;
-    console.log(authHeader);
     if (!authHeader) {
         return false;
     }
