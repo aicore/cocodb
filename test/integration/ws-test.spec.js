@@ -420,7 +420,7 @@ describe('Integration: ws end points', function () {
         const createIndexResp = await createIndex(TABLE_NAME, 'counter', 'INT');
         expect(createIndexResp.isSuccess).eql(true);
 
-        let queryResp = await query(TABLE_NAME, "$.Age > 10", ['Age'], {
+        let queryResp = await query(TABLE_NAME, "$.counter > 10", ['counter'], {
             pageOffset: 0,
             pageLimit: 10
         });
