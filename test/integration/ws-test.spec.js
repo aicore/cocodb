@@ -396,6 +396,49 @@ describe('Integration: ws end points', function () {
 
     });
 
+    it('query on index should paginate and pass', async function () {
+        const document = {
+            id: '12345',
+            'lastName': 'Alice',
+            'Age': 100,
+            'active': true,
+            'location': {
+                'city': 'Bangalore',
+                'state': 'Karnataka',
+                'layout': {
+                    'block': '1stblock'
+                }
+
+            }
+        };
+        let putPromises = [];
+        for (let i=0; i<100; i++){
+            document.counter = i;
+            putPromises.push(put(TABLE_NAME, document));
+        }
+        await Promise.all(putPromises);
+        const createIndexResp = await createIndex(TABLE_NAME, 'counter', 'INT');
+        expect(createIndexResp.isSuccess).eql(true);
+
+        let queryResp = await query(TABLE_NAME, "$.Age > 10", ['Age'], {
+            pageOffset: 0,
+            pageLimit: 10
+        });
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(10);
+        let lastDocCounter = queryResp.documents[9].counter;
+        expect(queryResp.documents[9].counter).not.eql(queryResp.documents[8].counter);
+
+        queryResp = await query(TABLE_NAME, "$.Age > 10", ['Age'], {
+            pageOffset: 9,
+            pageLimit: 10
+        });
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(10);
+        expect(lastDocCounter).eql(queryResp.documents[0].counter);
+
+    });
+
 });
 
 async function writeAndReadFromDb(numberOfTimes) {
