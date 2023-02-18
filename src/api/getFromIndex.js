@@ -11,6 +11,18 @@ const schema = {
                     type: 'string', minLength: 1, maxLength: 64
                 }, queryObject: {
                     type: 'object', minProperties: 1
+                },
+                options: {
+                    type: 'object',
+                    default: {},
+                    properties: {
+                        pageOffset: {
+                            type: 'integer'
+                        },
+                        pageLimit: {
+                            type: 'integer'
+                        }
+                    }
                 }
             }
         }, response: {
@@ -53,8 +65,9 @@ export function getFromIndexSchema() {
 export async function getFromIndex(request, reply) {
     const tableName = request.body.tableName;
     const queryObject = request.body.queryObject;
+    const options = request.body.options;
     try {
-        const documents = await LibMySql.getFromIndex(tableName, queryObject);
+        const documents = await LibMySql.getFromIndex(tableName, queryObject, options);
         return {
             isSuccess: true, documents: documents
         };

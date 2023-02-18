@@ -16,6 +16,18 @@ const schema = {
                 queryObject: {
                     type: 'object',
                     default: {}
+                },
+                options: {
+                    type: 'object',
+                    default: {},
+                    properties: {
+                        pageOffset: {
+                            type: 'integer'
+                        },
+                        pageLimit: {
+                            type: 'integer'
+                        }
+                    }
                 }
             }
         },
@@ -77,8 +89,9 @@ export function getFromNonIndexSchema() {
 export async function getFromNonIndex(request, reply) {
     const tableName = request.body.tableName;
     const queryObject = request.body.queryObject;
+    const options = request.body.options;
     try {
-        const documents = await LibMySql.getFromNonIndex(tableName, queryObject);
+        const documents = await LibMySql.getFromNonIndex(tableName, queryObject, options);
         return {
             isSuccess: true,
             documents: documents
