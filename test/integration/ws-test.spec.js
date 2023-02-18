@@ -429,7 +429,7 @@ describe('Integration: ws end points', function () {
         let lastDocCounter = queryResp.documents[9].counter;
         expect(queryResp.documents[9].counter).not.eql(queryResp.documents[8].counter);
 
-        queryResp = await query(TABLE_NAME, "$.Age > 10", ['Age'], {
+        queryResp = await query(TABLE_NAME, "$.counter > 10", ['counter'], {
             pageOffset: 9,
             pageLimit: 10
         });
