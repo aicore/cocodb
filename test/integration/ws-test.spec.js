@@ -308,6 +308,32 @@ describe('Integration: ws end points', function () {
         expect(getResponse.document.location.layout.block).eql('1stblock');
 
     });
+    it('conditional update document should pass', async function () {
+        const document = {
+            'name': 'Alice',
+            'Age': 100
+        };
+        const putResp = await put(TABLE_NAME, document);
+        document.name = "BOB";
+        document.Age = 23;
+
+        // conditional update with fail condition
+        let updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=50`);
+        expect(updateResponse.isSuccess).to.be.false;
+        let getResponse = await get(TABLE_NAME, putResp.documentId);
+        expect(getResponse.isSuccess).eql(false);
+        expect(getResponse.document.name).eql('Alice');
+        expect(getResponse.document.Age).eql(100);
+
+        // conditional update with passing condition
+        updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=100`);
+        expect(updateResponse.isSuccess).to.be.false;
+        getResponse = await get(TABLE_NAME, putResp.documentId);
+        expect(getResponse.isSuccess).eql(true);
+        expect(getResponse.document.name).eql('BOB');
+        expect(getResponse.document.Age).eql(23);
+
+    });
     it('make 1500 writes followed by read and delete', async function () {
         await writeAndReadFromDb(1500);
     });

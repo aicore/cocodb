@@ -49,8 +49,8 @@
   },
   "homepage": "https://github.com/aicore/cocodb#readme",
   "devDependencies": {
-    "@aicore/coco-db-client": "1.0.14",
-    "@aicore/cocodb-ws-client": "1.0.13",
+    "@aicore/coco-db-client": "1.0.15",
+    "@aicore/cocodb-ws-client": "1.0.14",
     "@aicore/libtestutils": "1.0.16",
     "@commitlint/cli": "17.4.4",
     "@commitlint/config-conventional": "17.4.4",
