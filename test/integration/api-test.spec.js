@@ -260,7 +260,7 @@ describe('Integration: http end point', function () {
         document.Age = 23;
 
         // conditional update with fail condition
-        let updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=50`);
+        let updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name='Alice' AND $.Age=50`);
         expect(updateResponse.isSuccess).to.be.false;
         let getResponse = await get(TABLE_NAME, putResp.documentId);
         expect(getResponse.isSuccess).eql(false);
@@ -268,7 +268,7 @@ describe('Integration: http end point', function () {
         expect(getResponse.document.Age).eql(100);
 
         // conditional update with passing condition
-        updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=100`);
+        updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name='Alice' AND $.Age=100`);
         expect(updateResponse.isSuccess).to.be.false;
         getResponse = await get(TABLE_NAME, putResp.documentId);
         expect(getResponse.isSuccess).eql(true);
