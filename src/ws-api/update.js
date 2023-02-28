@@ -13,8 +13,9 @@ export async function update(request) {
     const tableName = request.tableName;
     const documentId = request.documentId;
     const document = request.document;
+    const condition = request.condition;
     try {
-        const modifiedDocumentId = await LibMySql.update(tableName, documentId, document);
+        const modifiedDocumentId = await LibMySql.update(tableName, documentId, document, condition);
         response.isSuccess = true;
         response.documentId = modifiedDocumentId;
 

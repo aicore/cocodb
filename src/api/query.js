@@ -15,7 +15,8 @@ const querySchema = {
                 },
                 queryString: {
                     type: 'string',
-                    minLength: 1
+                    minLength: 1,
+                    maxLength: 2048
                 },
                 useIndexForFields: {
                     type: 'array',

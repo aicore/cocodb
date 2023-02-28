@@ -59,6 +59,25 @@ describe('unit test for update tests', function () {
         expect(resp.response.isSuccess).eql(true);
         expect(resp.response.documentId).eql('12345');
     });
+    it('processMessage should pass for conditional update', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.update,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                documentId: '12345',
+                document: {
+                    x: 1
+                },
+                condition: "$.x<10"
+
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.update);
+        expect(resp.id).eql('1');
+        expect(resp.response.isSuccess).eql(true);
+        expect(resp.response.documentId).eql('12345');
+    });
     it('update processMessage should fail if required parameters are missing name', async function () {
         const resp = await processesMessage({
             fn: COCO_DB_FUNCTIONS.update,
@@ -69,6 +88,25 @@ describe('unit test for update tests', function () {
                 document: {
                     x: 1
                 }
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.update);
+        expect(resp.id).eql('1');
+        expect(resp.response.isSuccess).eql(false);
+        expect(resp.response.errorMessage).eql('request validation Failed');
+    });
+    it('update processMessage should fail if condition parameter type is not string', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.update,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                documentId: '12345',
+                document: {
+                    x: 1
+                },
+                condition: 10
+
             }
         });
         expect(resp.fn).eql(COCO_DB_FUNCTIONS.update);

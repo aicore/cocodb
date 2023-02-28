@@ -30,6 +30,31 @@ describe('unit test for update test', function () {
         expect(response.isSuccess).eql(true);
 
     });
+    it('should pass with conditional update', async function () {
+        const response = await update({
+            body: {
+                tableName: 'hello',
+                document: {hello: "world"},
+                documentId: '1234',
+                condition: "$.A<10"
+            },
+            log: {
+                error: function (msg) {
+
+                },
+                info: function (msg) {
+
+                }
+            }
+        }, {
+            code: function (code) {
+
+            }
+        });
+        expect(response.documentId).eql('1234');
+        expect(response.isSuccess).eql(true);
+
+    });
     it('update document should throw error message in case of failure', async function () {
         const saveExecute = LibMySql.update;
         LibMySql.update = async function (_tableName, _documentId, _document) {

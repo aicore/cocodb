@@ -21,6 +21,11 @@ const updateSchema = {
                 document: {
                     type: 'object',
                     minProperties: 1
+                },
+                condition: {
+                    type: 'string',
+                    minLength: 1,
+                    maxLength: 2048
                 }
             }
         },
@@ -58,9 +63,10 @@ export function getUpdateSchema() {
 export async function update(request, reply) {
     const tableName = request.body.tableName;
     const document = request.body.document;
-    const req_documentId = request.body.documentId;
+    const requiredDocumentId = request.body.documentId;
+    const condition = request.body.condition;
     try {
-        const documentId = await LibMySql.update(tableName, req_documentId, document);
+        const documentId = await LibMySql.update(tableName, requiredDocumentId, document, condition);
         return {
             isSuccess: true,
             documentId: documentId
