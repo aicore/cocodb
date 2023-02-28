@@ -225,6 +225,32 @@ describe('Integration: http end point', function () {
 
     it('update document should pass', async function () {
         const document = {
+            'name': 'Alice',
+            'Age': 100
+        };
+        const putResp = await put(TABLE_NAME, document);
+        document.name = "BOB";
+        document.Age = 23;
+
+        // conditional update with fail condition
+        let updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=50`);
+        expect(updateResponse.isSuccess).to.be.false;
+        let getResponse = await get(TABLE_NAME, putResp.documentId);
+        expect(getResponse.isSuccess).eql(false);
+        expect(getResponse.document.name).eql('Alice');
+        expect(getResponse.document.Age).eql(100);
+
+        // conditional update with passing condition
+        updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name="Alice" AND $.Age=100`);
+        expect(updateResponse.isSuccess).to.be.false;
+        getResponse = await get(TABLE_NAME, putResp.documentId);
+        expect(getResponse.isSuccess).eql(true);
+        expect(getResponse.document.name).eql('BOB');
+        expect(getResponse.document.Age).eql(23);
+
+    });
+    it('conditional update document should pass', async function () {
+        const document = {
             id: '12345',
             'lastName': 'Alice',
             'Age': 100,
