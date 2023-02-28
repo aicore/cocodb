@@ -263,13 +263,13 @@ describe('Integration: http end point', function () {
         let updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name='Alice' AND $.Age=50`);
         expect(updateResponse.isSuccess).to.be.false;
         let getResponse = await get(TABLE_NAME, putResp.documentId);
-        expect(getResponse.isSuccess).eql(false);
+        expect(getResponse.isSuccess).eql(true);
         expect(getResponse.document.name).eql('Alice');
         expect(getResponse.document.Age).eql(100);
 
         // conditional update with passing condition
         updateResponse = await update(TABLE_NAME, putResp.documentId, document, `$.name='Alice' AND $.Age=100`);
-        expect(updateResponse.isSuccess).to.be.false;
+        expect(updateResponse.isSuccess).to.be.true;
         getResponse = await get(TABLE_NAME, putResp.documentId);
         expect(getResponse.isSuccess).eql(true);
         expect(getResponse.document.name).eql('BOB');
