@@ -25,6 +25,7 @@ import {init, isAuthenticated} from "./auth/auth.js";
 import {hello} from "./api/hello.js";
 import {getPutSchema, putDocument} from "./api/put.js";
 import {deleteKey, getDeleteKeySchema} from "./api/deleteKey.js";
+import {deleteDocuments, getDeleteDocumentsSchema} from "./api/deleteDocuments.js";
 import {deleteTable, getDeleteTableSchema} from "./api/deleteTable.js";
 import {createIndex, getCreateIndexSchema} from "./api/createIndex.js";
 import {getUpdateSchema, update} from "./api/update.js";
@@ -82,6 +83,9 @@ server.post('/put', getPutSchema(), function (request, reply) {
 });
 server.post('/deleteDocument', getDeleteKeySchema(), function (request, reply) {
     return deleteKey(request, reply);
+});
+server.post('/deleteDocuments', getDeleteDocumentsSchema(), function (request, reply) {
+    return deleteDocuments(request, reply);
 });
 server.post('/deleteTable', getDeleteTableSchema(), function (request, reply) {
     return deleteTable(request, reply);

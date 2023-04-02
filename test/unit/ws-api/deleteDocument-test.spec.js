@@ -7,8 +7,8 @@ import {processesMessage} from "../../../src/ws-api/wsProcessor.js";
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 
 let expect = chai.expect;
-describe('unit test for create database tests', function () {
-    it('deleteTable should pass', async function () {
+describe('unit test for deleteDocument tests', function () {
+    it('deleteDocument should pass', async function () {
         const response = await deleteDocument(
             {
                 tableName: 'hello.x',
@@ -17,7 +17,7 @@ describe('unit test for create database tests', function () {
         );
         expect(response.isSuccess).to.eql(true);
     });
-    it('deleteTable with condition should pass', async function () {
+    it('deleteDocument with condition should pass', async function () {
         const response = await deleteDocument(
             {
                 tableName: 'hello.x',
@@ -42,7 +42,7 @@ describe('unit test for create database tests', function () {
         expect(response.errorMessage).eql('Error: error');
         LibMySql.deleteKey = saveExecute;
     });
-    it('processMessage should pass for deleteTable', async function () {
+    it('processMessage should pass for deleteDocument', async function () {
         const resp = await processesMessage({
             fn: COCO_DB_FUNCTIONS.deleteDocument,
             id: '1',
@@ -55,7 +55,7 @@ describe('unit test for create database tests', function () {
         expect(resp.id).eql('1');
         expect(resp.response.isSuccess).eql(true);
     });
-    it('deleteTable processMessage should fail if required parameters are missing name', async function () {
+    it('deleteDocument processMessage should fail if required parameters are missing name', async function () {
         const resp = await processesMessage({
             fn: COCO_DB_FUNCTIONS.deleteDocument,
             id: '1',

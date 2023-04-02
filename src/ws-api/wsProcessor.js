@@ -9,6 +9,7 @@ import {createIndex} from "./createIndex.js";
 import {getFromNonIndex} from "./getFromNonIndex.js";
 import {getFromIndex} from "./getFromIndex.js";
 import {deleteDocument} from "./deleteDocument.js";
+import {deleteDocuments} from "./deleteDocuments.js";
 import {deleteTable} from "./deleteTable.js";
 import {mathAdd} from "./mathadd.js";
 import {update} from "./update.js";
@@ -62,6 +63,9 @@ export async function processesMessage(message) {
             break;
         case COCO_DB_FUNCTIONS.deleteDocument:
             returnMessage.response = await deleteDocument(message.request);
+            break;
+        case COCO_DB_FUNCTIONS.deleteDocuments:
+            returnMessage.response = await deleteDocuments(message.request);
             break;
         case  COCO_DB_FUNCTIONS.deleteTable:
             returnMessage.response = await deleteTable(message.request);
