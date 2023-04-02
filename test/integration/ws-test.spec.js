@@ -9,7 +9,7 @@ import {
 } from "./setupIntegTest.js";
 import {createDb, createTable, deleteDb, deleteTable, init, hello} from "@aicore/cocodb-ws-client";
 import {
-    createIndex, deleteDocument, get, getFromIndex, getFromNonIndex, put, update,
+    createIndex, deleteDocument, deleteDocuments, get, getFromIndex, getFromNonIndex, put, update,
     mathAdd, query
 } from "@aicore/cocodb-ws-client";
 import {close as wsClose} from "@aicore/cocodb-ws-client";
@@ -144,6 +144,81 @@ describe('Integration: ws end points', function () {
         getResp = await get(TABLE_NAME, putResp.documentId);
         expect(getResp.isSuccess).eql(false);
     });
+
+    // deleteDocuments test
+    async function _populateDB() {
+        const document = {
+            'lastName': 'Alice',
+            Age: 1,
+            'active': true,
+            'location': {
+                'city': 'Banglore',
+                'state': 'Karnataka',
+                'layout': {
+                    'block': '1stblock'
+                }
+
+            }
+        };
+        let putPromises = [];
+        for(let i=0; i<100; i++){
+            document.Age = i;
+            putPromises.push(put(TABLE_NAME, document));
+        }
+        await Promise.all(putPromises);
+    }
+
+    it('delete document without index should work as expected', async function () {
+        await _populateDB();
+
+        // verify write
+        let queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(14);
+
+        // now delete
+        let delResp = await deleteDocuments(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(delResp.isSuccess).eql(true);
+        expect(delResp.deleteCount).eql(14);
+
+        // verify delete
+        queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(0);
+        queryResp = await query(TABLE_NAME, "$.Age =10");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+        queryResp = await query(TABLE_NAME, "$.Age =25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+    });
+
+    it('delete document with index should work as expected', async function () {
+        await createIndex(TABLE_NAME, 'Age', 'INT');
+        await _populateDB();
+
+        // verify write
+        let queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(14);
+
+        // now delete
+        let delResp = await deleteDocuments(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(delResp.isSuccess).eql(true);
+        expect(delResp.deleteCount).eql(14);
+
+        // verify delete
+        queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(0);
+        queryResp = await query(TABLE_NAME, "$.Age =10", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+        queryResp = await query(TABLE_NAME, "$.Age =25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+    });
+
     it('createIndex should pass', async function () {
         const document = {
             id: '12345',
