@@ -24,6 +24,7 @@ import {
     createIndex,
     createTable,
     deleteDocument,
+    deleteDocuments,
     deleteTable,
     get,
     getFromIndex, getFromNonIndex,
@@ -146,6 +147,54 @@ describe('Integration: http end point', function () {
         // the document should be there still
         getResp = await get(TABLE_NAME, putResp.documentId);
         expect(getResp.isSuccess).eql(false);
+    });
+
+    // deleteDocuments test
+    async function _populateDB() {
+        const document = {
+            'lastName': 'Alice',
+            Age: 1,
+            'active': true,
+            'location': {
+                'city': 'Banglore',
+                'state': 'Karnataka',
+                'layout': {
+                    'block': '1stblock'
+                }
+
+            }
+        };
+        let putPromises = [];
+        for(let i=0; i<100; i++){
+            document.Age = i;
+            putPromises.push(put(TABLE_NAME, document));
+        }
+        await Promise.all(putPromises);
+    }
+
+    it('delete document without index should work as expected', async function () {
+        await _populateDB();
+
+        // verify write
+        let queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(13);
+
+        // now delete
+        let delResp = await deleteDocuments(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(delResp.isSuccess).eql(true);
+        expect(delResp.deleteCount).eql(13);
+
+        // verify delete
+        queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(0);
+        queryResp = await query(TABLE_NAME, "$.Age =10");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+        queryResp = await query(TABLE_NAME, "$.Age =25");
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
     });
     it('createIndex should pass', async function () {
         const document = {
