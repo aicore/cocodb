@@ -114,6 +114,39 @@ describe('Integration: http end point', function () {
         expect(delResp.isSuccess).eql(true);
 
     });
+    it('delete document with condition should work as expected', async function () {
+        const document = {
+            'lastName': 'Alice',
+            'Age': 100,
+            'active': true,
+            'location': {
+                'city': 'Banglore',
+                'state': 'Karnataka',
+                'layout': {
+                    'block': '1stblock'
+                }
+
+            }
+        };
+        const putResp = await put(TABLE_NAME, document);
+        expect(putResp.isSuccess).eql(true);
+
+        // now do a delete whose condition would fail
+        let delResp = await deleteDocument(TABLE_NAME, putResp.documentId, "$.Age = 200");
+        expect(delResp.isSuccess).eql(true);
+        // the document should be there still
+        let getResp = await get(TABLE_NAME, putResp.documentId);
+        expect(getResp.isSuccess).eql(true);
+        expect(getResp.document.lastName).eql('Alice');
+        expect(getResp.document.Age).eql(100);
+
+        // now delete with satisfying condition
+        delResp = await deleteDocument(TABLE_NAME, putResp.documentId, "$.Age = 100");
+        expect(delResp.isSuccess).eql(true);
+        // the document should be there still
+        getResp = await get(TABLE_NAME, putResp.documentId);
+        expect(getResp.isSuccess).eql(false);
+    });
     it('createIndex should pass', async function () {
         const document = {
             id: '12345',
