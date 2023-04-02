@@ -26,6 +26,25 @@ describe('unit test for delete key', function () {
         expect(response.isSuccess).to.eql(true);
 
     });
+    it('deleteKey should pass with condition', async function () {
+        const response = await deleteKey({
+            body: {
+                tableName: 'hello',
+                documentId: '123',
+                condition: "$.x = 30"
+            },
+            log: {
+                error: function (msg) {
+
+                },
+                info: function (msg) {
+
+                }
+            }
+        }, {});
+        expect(response.isSuccess).to.eql(true);
+
+    });
     it('should fail', async function () {
         const saveExecute = LibMySql.deleteKey;
         LibMySql.deleteKey = async function (tableName, documentId) {

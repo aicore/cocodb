@@ -17,6 +17,16 @@ describe('unit test for create database tests', function () {
         );
         expect(response.isSuccess).to.eql(true);
     });
+    it('deleteTable with condition should pass', async function () {
+        const response = await deleteDocument(
+            {
+                tableName: 'hello.x',
+                documentId:'123',
+                condition: "$.x=10"
+            }
+        );
+        expect(response.isSuccess).to.eql(true);
+    });
     it('deleteDocument should fail', async function () {
         const saveExecute = LibMySql.deleteKey;
         LibMySql.deleteKey = async function (_tableName) {

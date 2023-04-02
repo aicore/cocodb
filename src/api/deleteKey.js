@@ -12,6 +12,8 @@ const deleteKeySchema = {
                     type: 'string', minLength: 1, maxLength: 64
                 }, documentId: {
                     type: 'string', minLength: 1, maxLength: 32
+                }, condition: {
+                    type: 'string', minLength: 1, maxLength: 2048
                 }
             }
         }, response: {
@@ -39,12 +41,13 @@ export function getDeleteKeySchema() {
 export async function deleteKey(request, reply) {
     const tableName = request.body.tableName;
     const documentId = request.body.documentId;
+    const condition = request.body.condition;
 
     const response = {
         isSuccess: false
     };
     try {
-        response.isSuccess = await LibMySql.deleteKey(tableName, documentId);
+        response.isSuccess = await LibMySql.deleteKey(tableName, documentId, condition);
 
     } catch (e) {
         reply.code(BAD_REQUEST);
