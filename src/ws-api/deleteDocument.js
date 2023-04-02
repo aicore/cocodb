@@ -12,8 +12,9 @@ export async function deleteDocument(request) {
     };
     const tableName = request.tableName;
     const documentId = request.documentId;
+    const condition = request.condition;
     try {
-        const isSuccess = await LibMySql.deleteKey(tableName, documentId);
+        const isSuccess = await LibMySql.deleteKey(tableName, documentId, condition);
         response.isSuccess = isSuccess;
 
     } catch (e) {
