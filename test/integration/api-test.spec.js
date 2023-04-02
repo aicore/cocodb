@@ -178,12 +178,12 @@ describe('Integration: http end point', function () {
         // verify write
         let queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
         expect(queryResp.isSuccess).eql(true);
-        expect(queryResp.documents.length).eql(13);
+        expect(queryResp.documents.length).eql(14);
 
         // now delete
         let delResp = await deleteDocuments(TABLE_NAME, "$.Age >10 and $.Age <25");
         expect(delResp.isSuccess).eql(true);
-        expect(delResp.deleteCount).eql(13);
+        expect(delResp.deleteCount).eql(14);
 
         // verify delete
         queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25");
@@ -196,6 +196,33 @@ describe('Integration: http end point', function () {
         expect(queryResp.isSuccess).eql(true);
         expect(queryResp.documents.length).eql(1);
     });
+
+    it('delete document with index should work as expected', async function () {
+        await createIndex(TABLE_NAME, 'Age', 'INT');
+        await _populateDB();
+
+        // verify write
+        let queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(14);
+
+        // now delete
+        let delResp = await deleteDocuments(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(delResp.isSuccess).eql(true);
+        expect(delResp.deleteCount).eql(14);
+
+        // verify delete
+        queryResp = await query(TABLE_NAME, "$.Age >10 and $.Age <25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(0);
+        queryResp = await query(TABLE_NAME, "$.Age =10", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+        queryResp = await query(TABLE_NAME, "$.Age =25", ['Age']);
+        expect(queryResp.isSuccess).eql(true);
+        expect(queryResp.documents.length).eql(1);
+    });
+
     it('createIndex should pass', async function () {
         const document = {
             id: '12345',
