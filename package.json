@@ -58,8 +58,8 @@
     "chai": "4.3.7",
     "cli-color": "2.0.3",
     "documentation": "14.0.1",
-    "eslint": "8.37.0",
-    "glob": "9.3.4",
+    "eslint": "8.38.0",
+    "glob": "9.3.5",
     "husky": "8.0.3",
     "mocha": "10.2.0",
     "nodemon": "2.0.22"
