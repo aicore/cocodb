@@ -15,8 +15,8 @@ describe('unit Tests', function () {
         try {
             getConfigs();
         } catch (e) {
-            expect(e.toString()).eql('Error: Please provide valid app config file by setting APP_CONFIG' +
-                ' environment variable for example APP_CONFIG=./abc.json');
+            expect(e.toString()).eql('Error: Please provide valid app config file by setting APP_CONFIG ' +
+                'environment variable or providing valid app.json in src folder');
             exceptionOccurred = true;
         }
         expect(exceptionOccurred).eql(true);
