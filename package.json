@@ -50,7 +50,7 @@
   "homepage": "https://github.com/aicore/cocodb#readme",
   "devDependencies": {
     "@aicore/coco-db-client": "1.0.17",
-    "@aicore/cocodb-ws-client": "1.0.16",
+    "@aicore/cocodb-ws-client": "1.0.18",
     "@aicore/libtestutils": "1.0.16",
     "@commitlint/cli": "18.6.1",
     "@commitlint/config-conventional": "18.6.3",
@@ -61,7 +61,7 @@
     "eslint": "8.57.0",
     "glob": "9.3.5",
     "husky": "8.0.3",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "nodemon": "3.1.0"
   },
   "dependencies": {
