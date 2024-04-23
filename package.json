@@ -55,7 +55,7 @@
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "c8": "9.1.0",
-    "chai": "4.4.1",
+    "chai": "5.1.0",
     "cli-color": "2.0.4",
     "documentation": "14.0.3",
     "eslint": "8.57.0",
