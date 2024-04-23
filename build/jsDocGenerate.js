@@ -20,7 +20,7 @@
 
 /* eslint-env node */
 import * as documentation from 'documentation';
-import glob from "glob";
+import { glob } from 'glob';
 import * as path from "path";
 import * as fs from "fs";
 import clc from 'cli-color';

@@ -1,7 +1,7 @@
 /*global describe, it*/
 import mockedFunctions from '../setup-mocks.js';
 import LibMySql from "@aicore/libmysql";
-import chai from "chai";
+import * as chai from 'chai';
 import {createIndex, getCreateIndexSchema} from "../../../src/api/createIndex.js";
 
 let expect = chai.expect;
