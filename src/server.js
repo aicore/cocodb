@@ -17,7 +17,7 @@
  */
 
 import fastify from "fastify";
-import websocket from "@fastify/websocket";
+import * as websocket from "@fastify/websocket";
 import {getConfigs} from "./utils/configs.js";
 import LibMySql from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
@@ -46,10 +46,10 @@ server.register(websocket, {
 
 /* Registering a websocket handler. */
 server.register(async function (fastify) {
-    fastify.get('/ws/', {websocket: true}, (connection /* SocketStream */, _req /* FastifyRequest */) => {
-        connection.socket.on('message', async message => {
+    fastify.get('/ws/', {websocket: true}, (socket /* SocketStream */, _req /* FastifyRequest */) => {
+        socket.on('message', async message => {
             const response = await processesMessage(JSON.parse(message));
-            connection.socket.send(JSON.stringify(response));
+            socket.send(JSON.stringify(response));
         });
     });
 });
