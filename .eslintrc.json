@@ -1,4 +1,10 @@
 {
+    "ignores": [
+        "**/node_modules/**/*.js",
+        "src/thirdparty/**",
+        "src/**/*-min.js",
+        "src/**/*.min.js"
+    ],
     "rules": {
         "no-caller": 2,
         "no-control-regex": 2,
