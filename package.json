@@ -67,7 +67,7 @@
   "dependencies": {
     "@aicore/libcommonutils": "1.0.20",
     "@aicore/libmysql": "1.0.41",
-    "@fastify/websocket": "10.0.1",
+    "@fastify/websocket": "11.0.1",
     "ajv": "8.17.1",
     "fastify": "4.28.1",
     "uuid": "10.0.0"
