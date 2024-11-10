@@ -70,7 +70,7 @@
     "@fastify/websocket": "11.0.1",
     "ajv": "8.17.1",
     "fastify": "5.0.0",
-    "uuid": "10.0.0"
+    "uuid": "11.0.3"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
