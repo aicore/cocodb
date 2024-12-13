@@ -281,7 +281,7 @@ describe('Integration: ws end points', function () {
         expect(createIndexResp.isSuccess).eql(true);
         const newPutResp = await put(TABLE_NAME, document);
         expect(newPutResp.isSuccess).eql(false);
-        expect(newPutResp.errorMessage).eql("Error: Duplicate entry '12345' for key 'customers.b80bb7740288fda1f201890375a60c8f'");
+        expect(newPutResp.errorMessage).eql("Error: Duplicate entry '12345' for key 'customers.col_b80bb7740288fda1f201890375a60c8f'");
     });
     it('getFromNonIndex test should pass', async function () {
         const document = {
