@@ -21,6 +21,11 @@ const schema = {
                 jsonFieldsIncrements: {
                     type: 'object',
                     minProperties: 1
+                },
+                condition: {
+                    type: 'string',
+                    minLength: 1,
+                    maxLength: 2048
                 }
             }
         },
@@ -60,7 +65,7 @@ export function getMathAddSchema() {
 
 /**
  * It takes a table name, a document id, and a map of fields to increment, and increments the fields in the document with
- * the given id in the given table
+ * the given id in the given table. Optionally accepts a condition that must be satisfied for increment to happen.
  * @param{Object} request - The request object.
  * @param {Object} reply - The reply object that is used to send the response back to the client.
  * @returns {Promise} The response is an object with a property isSuccess.
@@ -69,8 +74,9 @@ export async function mathAdd(request, reply) {
     const tableName = request.body.tableName;
     const jsonFieldsIncrements = request.body.jsonFieldsIncrements;
     const documentId = request.body.documentId;
+    const condition = request.body.condition;
     try {
-        const success = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements);
+        const success = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements, condition);
         return {
             isSuccess: success
         };

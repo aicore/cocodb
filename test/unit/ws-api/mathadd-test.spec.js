@@ -98,5 +98,82 @@ describe('unit test for mathAdd tests', function () {
         expect(resp.response.errorMessage).eql('server did not send valid data');
         LibMySql.mathAdd = saveExecute;
     });
+
+    // conditional tests
+    it('mathAdd should pass with condition parameter', async function () {
+        const response = await mathAdd(
+            {
+                tableName: 'hello.x',
+                documentId: '123',
+                jsonFieldsIncrements: {
+                    x: 1
+                },
+                condition: 'x > 0'
+            }
+        );
+        expect(response.isSuccess).to.eql(true);
+    });
+
+    it('mathAdd should fail when condition is not satisfied', async function () {
+        const saveExecute = LibMySql.mathAdd;
+        LibMySql.mathAdd = async function (_tableName, _documentId, _jsonFieldsIncrements, _condition) {
+            throw new Error('Not updated - condition failed or unable to find documentId');
+        };
+
+        const response = await mathAdd(
+            {
+                tableName: 'hello.x',
+                documentId: '123',
+                jsonFieldsIncrements: {
+                    x: 1
+                },
+                condition: 'x < 0'
+            }
+        );
+
+        expect(response.isSuccess).eql(false);
+        expect(response.errorMessage).eql('Error: Not updated - condition failed or unable to find documentId');
+        LibMySql.mathAdd = saveExecute;
+    });
+
+    it('mathAdd should fail with invalid condition syntax', async function () {
+        const saveExecute = LibMySql.mathAdd;
+        LibMySql.mathAdd = async function (_tableName, _documentId, _jsonFieldsIncrements, _condition) {
+            throw new Error('invalid condition syntax');
+        };
+
+        const response = await mathAdd(
+            {
+                tableName: 'hello.x',
+                documentId: '123',
+                jsonFieldsIncrements: {
+                    x: 1
+                },
+                condition: 'invalid syntax !!'
+            }
+        );
+
+        expect(response.isSuccess).eql(false);
+        expect(response.errorMessage).eql('Error: invalid condition syntax');
+        LibMySql.mathAdd = saveExecute;
+    });
+
+    it('processMessage should pass for mathAdd with condition', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.mathAdd,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                documentId: '123',
+                jsonFieldsIncrements: {
+                    x: 1
+                },
+                condition: 'x > 0'
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.mathAdd);
+        expect(resp.id).eql('1');
+        expect(resp.response.isSuccess).eql(true);
+    });
 });
 
