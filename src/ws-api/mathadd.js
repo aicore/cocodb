@@ -13,8 +13,9 @@ export async function mathAdd(request) {
     const tableName = request.tableName;
     const documentId = request.documentId;
     const jsonFieldsIncrements = request.jsonFieldsIncrements;
+    const condition = request.condition;
     try {
-        response.isSuccess = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements);
+        response.isSuccess = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements, condition);
     } catch (e) {
         console.error(e);
         response.errorMessage = e.toString();

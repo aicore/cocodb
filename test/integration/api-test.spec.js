@@ -428,6 +428,70 @@ describe('Integration: http end point', function () {
         expect(incStatus.isSuccess).eql(false);
         expect(incStatus.errorMessage).eql('unable to find documentId');
     });
+    it('should be able to conditionally increment json field', async function () {
+        // First, create a document to work with
+        const putResp = await put(TABLE_NAME, {count: 5, score: 100, active: 1});
+        const docId = putResp.documentId;
+
+        // Test case 1: Condition satisfied (count > 3)
+        let incStatus = await mathAdd(TABLE_NAME, docId, {
+            count: 1,
+            score: 50
+        }, "$.count > 3");
+        expect(incStatus.isSuccess).eql(true);
+
+        // Verify the increment worked
+        let getResponse = await get(TABLE_NAME, docId);
+        let modifiedDoc = getResponse.document;
+        expect(modifiedDoc.count).eql(6);
+        expect(modifiedDoc.score).eql(150);
+
+        // Test case 2: Condition not satisfied (count > 10)
+        incStatus = await mathAdd(TABLE_NAME, docId, {
+            count: 5,
+            score: 200
+        }, "$.count > 10");
+
+        // Expect failure since the condition is not met
+        expect(incStatus.isSuccess).eql(false);
+        expect(incStatus.errorMessage).to.include('Not updated - condition failed');
+
+        // Verify values are unchanged
+        getResponse = await get(TABLE_NAME, docId);
+        modifiedDoc = getResponse.document;
+        expect(modifiedDoc.count).eql(6);  // Still 6, not 11
+        expect(modifiedDoc.score).eql(150); // Still 150, not 350
+
+        // Test case 3: Multiple conditions (count < 10 AND score > 100)
+        incStatus = await mathAdd(TABLE_NAME, docId, {
+            count: 2,
+            score: -50
+        }, "$.count < 10 AND $.score > 100");
+        expect(incStatus.isSuccess).eql(true);
+
+        // Verify values are updated according to all conditions being met
+        getResponse = await get(TABLE_NAME, docId);
+        modifiedDoc = getResponse.document;
+        expect(modifiedDoc.count).eql(8);
+        expect(modifiedDoc.score).eql(100);
+
+        // Test case 4: Invalid condition syntax
+        incStatus = await mathAdd(TABLE_NAME, docId, {
+            count: 1
+        }, "$.count invalid syntax");
+
+        expect(incStatus.isSuccess).eql(false);
+        // Error message will depend on your implementation's error handling
+        expect(incStatus.errorMessage).to.exist;
+
+        // Test case 5: Condition with nonexistent field (should evaluate as null and not match)
+        incStatus = await mathAdd(TABLE_NAME, docId, {
+            count: 1
+        }, "$.nonexistent > 0");
+
+        expect(incStatus.isSuccess).eql(false);
+        expect(incStatus.errorMessage).to.include('Not updated - condition failed');
+    });
     it('integ tests for query', async function () {
         const putResp = await put(TABLE_NAME, {age: 10, total: 100});
         expect(putResp.isSuccess).eql(true);
