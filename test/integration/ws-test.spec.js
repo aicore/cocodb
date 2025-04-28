@@ -507,7 +507,7 @@ describe('Integration: ws end points', function () {
         incStatus = await mathAdd(TABLE_NAME, docId, {
             count: 5,
             score: 200
-        }, "$.count > 10");
+        }, "$.count < 10");
 
         // Expect failure since the condition is not met
         expect(incStatus.isSuccess).eql(false);
@@ -535,7 +535,7 @@ describe('Integration: ws end points', function () {
         // Test case 4: Invalid condition syntax
         incStatus = await mathAdd(TABLE_NAME, docId, {
             count: 1
-        }, "$.count invalid syntax");
+        }, "$.count invalid syntaxs");
 
         expect(incStatus.isSuccess).eql(false);
         // Error message will depend on your implementation's error handling
