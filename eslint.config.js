@@ -13,6 +13,8 @@ export default {
         globals: {
             process: true,    // Assume process is a global variable (specific to Node.js)
             setTimeout: true,  // Assume setTimeout is a global variable
+            setInterval: true,
+            clearInterval: true,
             console: true
         }
     },
