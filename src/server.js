@@ -47,6 +47,30 @@ server.register(websocket, {
 /* Registering a websocket handler. */
 server.register(async function (fastify) {
     fastify.get('/ws/', {websocket: true}, (socket /* SocketStream */, _req /* FastifyRequest */) => {
+        // WebSocket heartbeat mechanism for connection health monitoring
+        let isAlive = true;
+
+        socket.on('pong', () => {
+            isAlive = true;
+        });
+
+        // Send ping every 30 seconds to detect dead connections
+        const heartbeat = setInterval(() => {
+            if (!isAlive) {
+                fastify.log.warn('WebSocket connection unresponsive, terminating');
+                clearInterval(heartbeat);
+                return socket.terminate();
+            }
+            isAlive = false;
+            socket.ping();
+        }, 30000);
+
+        // Clean up heartbeat interval on connection close
+        socket.on('close', () => {
+            clearInterval(heartbeat);
+        });
+
+        // Handle incoming messages
         socket.on('message', async message => {
             const response = await processesMessage(JSON.parse(message));
             socket.send(JSON.stringify(response));
