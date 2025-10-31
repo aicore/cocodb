@@ -19,7 +19,6 @@
     "eslint:fix": "npm run lint:fix",
     "lint": "eslint --quiet src test",
     "lint:fix": "eslint --quiet --fix src test",
-    "prepare": "husky install",
     "test": "npm run test:unit && npm run test:integ",
     "test:unit": "APP_CONFIG=./test/unit/utils/.app.json mocha test/unit/*.spec.js test/unit/**/*.spec.js  test/unit/**/*.spec.js  test/unit/**/**/*.spec.js --timeout=3000",
     "test:integ": "mocha test/integration/*.spec.js test/integration/**/*.spec.js --timeout=30000",
@@ -60,7 +59,6 @@
     "documentation": "14.0.3",
     "eslint": "^9.38.0",
     "glob": "11.0.3",
-    "husky": "9.1.7",
     "mocha": "11.7.4",
     "nodemon": "3.1.10"
   },
