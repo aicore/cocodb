@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.createIndex, getCreateIndexSchema().schema);
 
 /* Getting a document from the database. */
-export async function createIndex(request) {
+export async function createIndex(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -19,7 +19,12 @@ export async function createIndex(request) {
     try {
         response.isSuccess = await LibMySql.createIndexForJsonField(tableName, jsonField, dataType, isUnique, isNotNull);
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            jsonField,
+            operation: 'createIndex'
+        }, 'Error in createIndex operation');
         response.errorMessage = e.toString();
     }
     return response;

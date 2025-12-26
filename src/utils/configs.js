@@ -46,3 +46,25 @@ function _getAppConfig(file) {
 export function deleteAppConfig() {
     APP_CONFIG = null;
 }
+
+/**
+ * Gets the stage from config and sets NODE_ENV accordingly
+ * @returns {string} The stage value from config
+ */
+export function getStage() {
+    const config = getConfigs();
+    const stage = config.stage || 'development';
+
+    // Normalize stage names (case-insensitive)
+    const normalizedStage = stage.toLowerCase();
+    const isDev = normalizedStage === 'dev' || normalizedStage === 'development';
+
+    // Set NODE_ENV based on stage
+    if (isDev) {
+        process.env.NODE_ENV = 'development';
+    } else {
+        process.env.NODE_ENV = 'production';
+    }
+
+    return stage;
+}

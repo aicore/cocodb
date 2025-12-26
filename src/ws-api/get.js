@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.get, getSchema().schema);
 
 /* Getting a document from the database. */
-export async function get(request) {
+export async function get(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -18,7 +18,12 @@ export async function get(request) {
         response.document = document;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            documentId,
+            operation: 'get'
+        }, 'Error in get operation');
         response.errorMessage = e.toString();
     }
     return response;

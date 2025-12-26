@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.query, getQuerySchema().schema);
 
 /* Getting a document from the database. */
-export async function query(request) {
+export async function query(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -20,7 +20,12 @@ export async function query(request) {
         response.documents = documents;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            queryString,
+            operation: 'query'
+        }, 'Error in query operation');
         response.errorMessage = e.toString();
 
     }

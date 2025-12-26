@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.getFromIndex, getFromIndexSchema().schema);
 
 /* Getting a document from the database. */
-export async function getFromIndex(request) {
+export async function getFromIndex(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -19,7 +19,12 @@ export async function getFromIndex(request) {
         response.documents = documents;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            queryObject,
+            operation: 'getFromIndex'
+        }, 'Error in getFromIndex operation');
         response.errorMessage = e.toString();
     }
     return response;
