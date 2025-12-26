@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.update, getUpdateSchema().schema);
 
 /* Getting a document from the database. */
-export async function update(request) {
+export async function update(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -20,7 +20,12 @@ export async function update(request) {
         response.documentId = modifiedDocumentId;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            documentId,
+            operation: 'update'
+        }, 'Error in update operation');
         response.errorMessage = e.toString();
 
     }

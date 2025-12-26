@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.deleteDb, getDeleteDBSchema().schema);
 
 /* Getting a document from the database. */
-export async function deleteDb(request) {
+export async function deleteDb(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -14,7 +14,11 @@ export async function deleteDb(request) {
     try {
         response.isSuccess = await LibMySql.deleteDataBase(databaseName);
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            databaseName,
+            operation: 'deleteDb'
+        }, 'Error in deleteDb operation');
         response.errorMessage = e.toString();
     }
     return response;

@@ -18,7 +18,9 @@
 
 import fastify from "fastify";
 import * as websocket from "@fastify/websocket";
+import crypto from 'crypto';
 import {getConfigs} from "./utils/configs.js";
+import {createFastifyLogger} from './utils/logger.js';
 import LibMySql from "@aicore/libmysql";
 import {createTable, getCreatTableSchema} from './api/createTable.js';
 import {init, isAuthenticated} from "./auth/auth.js";
@@ -39,14 +41,22 @@ import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 import {processesMessage} from "./ws-api/wsProcessor.js";
 import {getQuerySchema, query} from "./api/query.js";
 
-const server = fastify({logger: true});
+const server = fastify({
+    logger: createFastifyLogger(),
+    trustProxy: true,
+    genReqId: () => crypto.randomUUID()
+});
+
+// Make logger available globally for non-request contexts
+global.logger = server.log;
+
 server.register(websocket, {
     options: {maxPayload: 1048576}
 });
 
 /* Registering a websocket handler. */
 server.register(async function (fastify) {
-    fastify.get('/ws/', {websocket: true}, (socket /* SocketStream */, _req /* FastifyRequest */) => {
+    fastify.get('/ws/', {websocket: true}, (socket /* SocketStream */, req /* FastifyRequest */) => {
         // WebSocket heartbeat mechanism for connection health monitoring
         let isAlive = true;
 
@@ -72,7 +82,7 @@ server.register(async function (fastify) {
 
         // Handle incoming messages
         socket.on('message', async message => {
-            const response = await processesMessage(JSON.parse(message));
+            const response = await processesMessage(JSON.parse(message), req.log);
             socket.send(JSON.stringify(response));
         });
     });
@@ -148,11 +158,11 @@ server.post('/query', getQuerySchema(), function (request, reply) {
 export async function initMysql(configs) {
     try {
 
-        if (!LibMySql.init(configs.mysql)) {
+        if (!LibMySql.init(configs.mysql, global.logger)) {
             throw new Error('Exception occurred while connecting to DB');
         }
     } catch (e) {
-        fastify.log.error(e);
+        server.log.error(e);
         process.exit(1);
     }
 }
@@ -165,7 +175,7 @@ export async function startServer(configs) {
         init(configs.authKey);
         await server.listen({port: configs.port, host: configs.allowPublicAccess ? '0.0.0.0' : 'localhost'});
     } catch (err) {
-        console.error(err);
+        server.log.error(err);
         process.exit(1);
     }
 }

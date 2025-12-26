@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.deleteDocuments, getDeleteDocumentsSchema().schema);
 
 /* Getting a document from the database. */
-export async function deleteDocuments(request) {
+export async function deleteDocuments(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -18,6 +18,12 @@ export async function deleteDocuments(request) {
         response.isSuccess = true;
 
     } catch (e) {
+        logger.error({
+            err: e,
+            tableName,
+            queryString,
+            operation: 'deleteDocuments'
+        }, 'Error in deleteDocuments operation');
         response.errorMessage = e.toString();
     }
     return response;

@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.mathAdd, getMathAddSchema().schema);
 
 /* Getting a document from the database. */
-export async function mathAdd(request) {
+export async function mathAdd(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -17,7 +17,12 @@ export async function mathAdd(request) {
     try {
         response.isSuccess = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements, condition);
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            documentId,
+            operation: 'mathAdd'
+        }, 'Error in mathAdd operation');
         response.errorMessage = e.toString();
 
     }

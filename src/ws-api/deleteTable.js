@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.deleteTable, getDeleteTableSchema().schema);
 
 
-export async function deleteTable(request) {
+export async function deleteTable(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -15,7 +15,11 @@ export async function deleteTable(request) {
         response.isSuccess = await LibMySql.deleteTable(tableName);
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            operation: 'deleteTable'
+        }, 'Error in deleteTable operation');
         response.errorMessage = e.toString();
     }
     return response;

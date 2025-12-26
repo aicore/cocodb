@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.put, getPutSchema().schema);
 
 /* Getting a document from the database. */
-export async function put(request) {
+export async function put(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -19,7 +19,11 @@ export async function put(request) {
         response.documentId = documentId;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            operation: 'put'
+        }, 'Error in put operation');
         response.errorMessage = e.toString();
     }
     return response;

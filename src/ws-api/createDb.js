@@ -5,7 +5,7 @@ import {addSchema} from "./validator/validator.js";
 
 addSchema(COCO_DB_FUNCTIONS.createDb, getCreateDbSchema().schema);
 
-export async function createDb(request) {
+export async function createDb(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -13,7 +13,11 @@ export async function createDb(request) {
     try {
         response.isSuccess = await LibMySql.createDataBase(databaseName);
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            databaseName,
+            operation: 'createDb'
+        }, 'Error in createDb operation');
         response.errorMessage = e.toString();
     }
     return response;

@@ -6,7 +6,7 @@ import {addSchema} from "./validator/validator.js";
 addSchema(COCO_DB_FUNCTIONS.getFromNonIndex, getFromNonIndexSchema().schema);
 
 /* Getting a document from the database. */
-export async function getFromNonIndex(request) {
+export async function getFromNonIndex(request, logger = console) {
     const response = {
         isSuccess: false
     };
@@ -19,7 +19,12 @@ export async function getFromNonIndex(request) {
         response.documents = documents;
 
     } catch (e) {
-        console.error(e);
+        logger.error({
+            err: e,
+            tableName,
+            queryObject,
+            operation: 'getFromNonIndex'
+        }, 'Error in getFromNonIndex operation');
         response.errorMessage = e.toString();
 
     }
