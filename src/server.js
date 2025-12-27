@@ -50,6 +50,30 @@ const server = fastify({
 // Make logger available globally for non-request contexts
 global.logger = server.log;
 
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    server.log.fatal({
+        err: {
+            type: error.name,
+            message: error.message,
+            stack: error.stack
+        }
+    }, 'Uncaught exception');
+    process.exit(1);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    server.log.fatal({
+        err: {
+            type: reason?.name || 'UnhandledRejection',
+            message: reason?.message || String(reason),
+            stack: reason?.stack
+        }
+    }, 'Unhandled promise rejection');
+    process.exit(1);
+});
+
 server.register(websocket, {
     options: {maxPayload: 1048576}
 });
@@ -82,8 +106,24 @@ server.register(async function (fastify) {
 
         // Handle incoming messages
         socket.on('message', async message => {
-            const response = await processesMessage(JSON.parse(message), req.log);
-            socket.send(JSON.stringify(response));
+            try {
+                const response = await processesMessage(JSON.parse(message), req.log);
+                socket.send(JSON.stringify(response));
+            } catch (error) {
+                fastify.log.error({
+                    err: {
+                        type: error.name,
+                        message: error.message,
+                        stack: error.stack
+                    },
+                    reqId: req.id
+                }, 'WebSocket message processing error');
+
+                socket.send(JSON.stringify({
+                    error: 'Internal server error',
+                    message: error.message
+                }));
+            }
         });
     });
 });
@@ -99,6 +139,33 @@ server.addHook('onRequest', (request, reply, done) => {
     }
 });
 
+/* Custom error handler to log all errors at ERROR level for Elasticsearch */
+server.setErrorHandler(function (error, request, reply) {
+    // Log the error at ERROR level with full context
+    this.log.error({
+        err: {
+            type: error.name,
+            message: error.message,
+            stack: error.stack
+        },
+        reqId: request.id,
+        req: {
+            method: request.method,
+            url: request.url,
+            hostname: request.hostname,
+            remoteAddress: request.ip
+        },
+        statusCode: error.statusCode || 500
+    }, error.message || 'Request error');
+
+    // Send appropriate error response
+    const statusCode = error.statusCode || 500;
+    reply.code(statusCode).send({
+        error: error.name,
+        message: error.message,
+        statusCode: statusCode
+    });
+});
 
 /* root handler. It is a function that is called when a request is made to the server. */
 server.get('/', function (request, reply) {
