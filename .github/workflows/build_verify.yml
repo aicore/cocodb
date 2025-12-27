@@ -19,7 +19,7 @@ jobs:
         run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
 
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: 'npm'
