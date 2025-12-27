@@ -9,7 +9,13 @@ import {getStage} from './configs.js';
  */
 export function createFastifyLogger() {
     // This sets NODE_ENV internally based on app.json stage
-    getStage();
+    // Handle case where config doesn't exist yet (e.g., during integration tests)
+    try {
+        getStage();
+    } catch (e) {
+        // If config doesn't exist, default to development
+        process.env.NODE_ENV = 'development';
+    }
 
     const isDevelopment = process.env.NODE_ENV === 'development';
 
