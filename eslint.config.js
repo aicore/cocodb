@@ -16,7 +16,11 @@ export default {
             setTimeout: true,  // Assume setTimeout is a global variable
             setInterval: true,
             clearInterval: true,
-            console: true
+            console: true,
+            describe: true,   // Mocha test globals
+            it: true,
+            beforeEach: true,
+            afterEach: true
         }
     },
     rules: {
