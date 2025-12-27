@@ -36,6 +36,7 @@ export function createFastifyLogger() {
 
     // ECS format for production/staging
     return ecsFormat({
-        convertReqRes: true  // Converts req/res to ECS HTTP fields
+        convertReqRes: true,  // Converts req/res to ECS HTTP fields
+        convertErr: true      // Converts err to ECS error fields
     });
 }
