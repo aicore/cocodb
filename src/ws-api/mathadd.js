@@ -1,4 +1,8 @@
 import {getMathAddSchema} from "../api/mathadd.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -17,6 +21,7 @@ export async function mathAdd(request, logger = console) {
     try {
         response.isSuccess = await LibMySql.mathAdd(tableName, documentId, jsonFieldsIncrements, condition);
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'mathadd', "error");
         logger.error({
             err: e,
             tableName,

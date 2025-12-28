@@ -1,4 +1,8 @@
 import {getDeleteDBSchema} from "../api/deleteDb.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -14,6 +18,7 @@ export async function deleteDb(request, logger = console) {
     try {
         response.isSuccess = await LibMySql.deleteDataBase(databaseName);
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'deleteDb', "error");
         logger.error({
             err: e,
             databaseName,

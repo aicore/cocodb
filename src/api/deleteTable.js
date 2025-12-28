@@ -1,5 +1,9 @@
 // Refer https://json-schema.org/understanding-json-schema/index.html
 import LibMySql from "@aicore/libmysql";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 
 const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
@@ -53,6 +57,7 @@ export async function deleteTable(request, reply) {
             isSuccess: isSuccess
         };
     } catch (e) {
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
         const response = {
             isSuccess: false,
             errorMessage: e.toString()

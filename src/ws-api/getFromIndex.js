@@ -1,4 +1,8 @@
 import {getFromIndexSchema} from "../api/getFromIndex.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -19,6 +23,7 @@ export async function getFromIndex(request, logger = console) {
         response.documents = documents;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'getFromIndex', "error");
         logger.error({
             err: e,
             tableName,

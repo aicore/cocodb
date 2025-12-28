@@ -35,17 +35,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 3 },
-              { "color": "red", "value": 5 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 3
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
       "id": 1,
       "options": {
         "colorMode": "value",
@@ -54,7 +71,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -71,12 +90,12 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS failure_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'REQUEST'\n  AND subcategory = 'ALL_ROUTES'\n  AND label = '5xx'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS error_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'error'\n  AND label = 'parse_error'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
       ],
-      "title": "Critical Failures (5xx)",
+      "title": "WS Parse Errors",
       "type": "stat"
     },
     {
@@ -96,24 +115,43 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": 0 },
-              { "color": "orange", "value": 95 },
-              { "color": "yellow", "value": 98 },
-              { "color": "green", "value": 99 }
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 95
+              },
+              {
+                "color": "yellow",
+                "value": 98
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
             ]
           },
           "unit": "percent"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
       "id": 2,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -130,12 +168,12 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'REQUEST' AND subcategory = 'ALL_ROUTES'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
+          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET' AND subcategory = 'ALL_WS_OPS'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
           "refId": "A",
           "selectedFormat": 2
         }
       ],
-      "title": "API Success Rate",
+      "title": "Success Rate",
       "type": "gauge"
     },
     {
@@ -152,17 +190,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 5 },
-              { "color": "red", "value": 10 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
       "id": 3,
       "options": {
         "colorMode": "value",
@@ -171,7 +226,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -188,7 +245,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS failure_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'AUTH'\n  AND subcategory = 'request'\n  AND label = 'failure'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS failure_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'AUTH'\n  AND subcategory = 'request'\n  AND label = 'failure'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -210,17 +267,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 100 },
-              { "color": "orange", "value": 500 },
-              { "color": "red", "value": 1000 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 100
+              },
+              {
+                "color": "orange",
+                "value": 500
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
             ]
           },
           "unit": "ms"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
       "id": 4,
       "options": {
         "colorMode": "value",
@@ -229,7 +303,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -246,12 +322,12 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS latency_ms\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'REQUEST'\n  AND subcategory = 'ALL_ROUTES'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS latency_ms\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'value'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'ALL_WS_OPS'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
       ],
-      "title": "Avg Latency (All Routes)",
+      "title": "Avg Latency",
       "type": "stat"
     },
     {
@@ -268,17 +344,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 5 },
-              { "color": "red", "value": 10 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 6 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
       "id": 21,
       "options": {
         "colorMode": "value",
@@ -287,7 +380,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -304,7 +399,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS error_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'REQUEST'\n  AND subcategory = 'ALL_ROUTES'\n  AND label = 'error'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS error_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'error'\n  AND label = 'parse_error'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -314,7 +409,12 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 30 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
       "id": 5,
       "panels": [],
       "title": "HTTP Request Metrics",
@@ -367,18 +467,29 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "ms"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 31 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
       "id": 6,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -397,7 +508,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp,\n  approx_percentile(value, 0.50) AS \"P50\",\n  approx_percentile(value, 0.95) AS \"P95\",\n  approx_percentile(value, 0.99) AS \"P99\"\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'REQUEST' AND subcategory = 'ALL_ROUTES'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY timestamp;",
+          "rawSql": "SELECT\n  timestamp,\n  approx_percentile(value, 0.50) AS \"P50\",\n  approx_percentile(value, 0.95) AS \"P95\",\n  approx_percentile(value, 0.99) AS \"P99\"\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'value'\n  AND category = 'REQUEST' AND subcategory = 'ALL_ROUTES'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY timestamp;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -452,27 +563,59 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "success" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "failure" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "failure"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 31 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
       "id": 7,
       "options": {
         "legend": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -491,7 +634,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "(SELECT timestamp AS \"time\", 'success' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='REQUEST'\n AND subcategory='ALL_ROUTES' AND label='success' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'failure' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='REQUEST'\n AND subcategory='ALL_ROUTES' AND label='failure' AND $__timeFilter(timestamp))\nORDER BY \"time\", result;",
+          "rawSql": "(SELECT timestamp AS \"time\", 'success' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='REQUEST'\n AND subcategory='ALL_ROUTES' AND label='success' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'failure' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='REQUEST'\n AND subcategory='ALL_ROUTES' AND label='failure' AND $__timeFilter(timestamp))\nORDER BY \"time\", result;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -501,7 +644,12 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 12 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
       "id": 10,
       "panels": [],
       "title": "WebSocket Metrics",
@@ -554,27 +702,59 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "opened" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "opened"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "closed" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "closed"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
       "id": 11,
       "options": {
         "legend": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -593,7 +773,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "(SELECT timestamp AS \"time\", 'opened' AS event, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='WEBSOCKET'\n AND subcategory='connection' AND label='opened' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'closed' AS event, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='WEBSOCKET'\n AND subcategory='connection' AND label='closed' AND $__timeFilter(timestamp))\nORDER BY \"time\", event;",
+          "rawSql": "(SELECT timestamp AS \"time\", 'opened' AS event, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='WEBSOCKET'\n AND subcategory='connection' AND label='opened' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'closed' AS event, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='WEBSOCKET'\n AND subcategory='connection' AND label='closed' AND $__timeFilter(timestamp))\nORDER BY \"time\", event;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -615,17 +795,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 5 },
-              { "color": "red", "value": 10 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 13 },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 13
+      },
       "id": 12,
       "options": {
         "colorMode": "value",
@@ -634,7 +831,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -651,7 +850,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS timeout_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'connection'\n  AND label = 'timeout'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS timeout_count\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'connection'\n  AND label = 'timeout'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -676,24 +875,43 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": 0 },
-              { "color": "orange", "value": 95 },
-              { "color": "yellow", "value": 98 },
-              { "color": "green", "value": 99 }
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 95
+              },
+              {
+                "color": "yellow",
+                "value": 98
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
             ]
           },
           "unit": "percent"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 13 },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 13
+      },
       "id": 13,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -710,7 +928,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'WEBSOCKET' AND subcategory = 'ALL_WS_OPS'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
+          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET' AND subcategory = 'ALL_WS_OPS'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -732,17 +950,34 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": 0 },
-              { "color": "yellow", "value": 1 },
-              { "color": "orange", "value": 5 },
-              { "color": "red", "value": 10 }
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "orange",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 17 },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 17
+      },
       "id": 14,
       "options": {
         "colorMode": "value",
@@ -751,7 +986,9 @@
         "orientation": "auto",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -768,7 +1005,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS parse_errors\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'error'\n  AND label = 'parse_error'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS parse_errors\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET'\n  AND subcategory = 'error'\n  AND label = 'parse_error'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -823,18 +1060,29 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "ms"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
       "id": 15,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -853,7 +1101,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp,\n  approx_percentile(value, 0.50) AS \"P50\",\n  approx_percentile(value, 0.95) AS \"P95\",\n  approx_percentile(value, 0.99) AS \"P99\"\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'WEBSOCKET' AND subcategory = 'ALL_WS_OPS'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY timestamp;",
+          "rawSql": "SELECT\n  timestamp,\n  approx_percentile(value, 0.50) AS \"P50\",\n  approx_percentile(value, 0.95) AS \"P95\",\n  approx_percentile(value, 0.99) AS \"P99\"\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'value'\n  AND category = 'WEBSOCKET' AND subcategory = 'ALL_WS_OPS'\n  AND label = 'latency_ms'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY timestamp;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -908,18 +1156,28 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 21 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
       "id": 16,
       "options": {
         "legend": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -938,7 +1196,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  subcategory AS operation,\n  SUM(value) AS count\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'WEBSOCKET'\n  AND subcategory NOT IN ('connection', 'error', 'ALL_WS_OPS')\n  AND label = 'success'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY \"time\", operation;",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  subcategory AS operation,\n  SUM(value) AS count\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'WEBSOCKET'\n  AND subcategory NOT IN ('connection', 'error', 'ALL_WS_OPS')\n  AND label = 'success'\n  AND $__timeFilter(timestamp)\nSAMPLE BY 1m\nORDER BY \"time\", operation;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -948,7 +1206,12 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 40 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
       "id": 17,
       "panels": [],
       "title": "Authentication",
@@ -971,24 +1234,43 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": 0 },
-              { "color": "orange", "value": 95 },
-              { "color": "yellow", "value": 98 },
-              { "color": "green", "value": 99 }
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 95
+              },
+              {
+                "color": "yellow",
+                "value": 98
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
             ]
           },
           "unit": "percent"
         },
         "overrides": []
       },
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 41 },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 41
+      },
       "id": 18,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -1005,7 +1287,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND category = 'AUTH' AND subcategory = 'request'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
+          "rawSql": "SELECT\n  timestamp,\n  100.0 * sum(CASE WHEN label = 'success' THEN value ELSE 0 END) /\n    NULLIF(sum(CASE WHEN label IN ('success', 'failure') THEN value ELSE 0 END), 0)\n    AS success_rate\nFROM metrics\nWHERE service = 'cocodb' AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'AUTH' AND subcategory = 'request'\n  AND label IN ('success', 'failure')\n  AND $__timeFilter(timestamp)\nGROUP BY timestamp\nORDER BY timestamp;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -1060,27 +1342,59 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "success" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "success"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "failure" },
-            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
+            "matcher": {
+              "id": "byName",
+              "options": "failure"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 8, "w": 9, "x": 6, "y": 41 },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 6,
+        "y": 41
+      },
       "id": 19,
       "options": {
         "legend": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -1099,7 +1413,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "(SELECT timestamp AS \"time\", 'success' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='AUTH'\n AND subcategory='request' AND label='success' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'failure' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND category='AUTH'\n AND subcategory='request' AND label='failure' AND $__timeFilter(timestamp))\nORDER BY \"time\", result;",
+          "rawSql": "(SELECT timestamp AS \"time\", 'success' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='AUTH'\n AND subcategory='request' AND label='success' AND $__timeFilter(timestamp))\nUNION ALL\n(SELECT timestamp AS \"time\", 'failure' AS result, value FROM metrics\n WHERE service='cocodb' AND stage='production' AND metric_type='count' AND category='AUTH'\n AND subcategory='request' AND label='failure' AND $__timeFilter(timestamp))\nORDER BY \"time\", result;",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -1155,18 +1469,28 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null }
+              {
+                "color": "green",
+                "value": null
+              }
             ]
           },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 9, "x": 15, "y": 41 },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 41
+      },
       "id": 20,
       "options": {
         "legend": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
@@ -1185,7 +1509,7 @@
           },
           "format": 0,
           "queryType": "sql",
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS failures\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND category = 'AUTH'\n  AND subcategory = 'request'\n  AND label = 'failure'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
+          "rawSql": "SELECT\n  timestamp AS \"time\",\n  value AS failures\nFROM metrics\nWHERE service = 'cocodb'\n  AND stage = 'production'\n  AND metric_type = 'count'\n  AND category = 'AUTH'\n  AND subcategory = 'request'\n  AND label = 'failure'\n  AND $__timeFilter(timestamp)\nORDER BY \"time\";",
           "refId": "A",
           "selectedFormat": 2
         }
@@ -1197,7 +1521,11 @@
   "preload": false,
   "refresh": "30s",
   "schemaVersion": 40,
-  "tags": ["cocodb", "api", "metrics"],
+  "tags": [
+    "cocodb",
+    "api",
+    "metrics"
+  ],
   "templating": {
     "list": []
   },
