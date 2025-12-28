@@ -53,7 +53,8 @@ const server = fastify({
 global.logger = server.log;
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', async (error) => {
+    Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, "uncaught_exception");
     server.log.fatal({
         err: {
             type: error.name,
@@ -61,11 +62,13 @@ process.on('uncaughtException', (error) => {
             stack: error.stack
         }
     }, 'Uncaught exception');
+    await Metrics.flush().catch(console.error);
     process.exit(1);
 });
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', async (reason, promise) => {
+    Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, "unhandled_rejection");
     server.log.fatal({
         err: {
             type: reason?.name || 'UnhandledRejection',
@@ -73,6 +76,7 @@ process.on('unhandledRejection', (reason, promise) => {
             stack: reason?.stack
         }
     }, 'Unhandled promise rejection');
+    await Metrics.flush().catch(console.error);
     process.exit(1);
 });
 
@@ -196,6 +200,17 @@ server.addHook('onResponse', (request, reply, done) => {
 
 /* Custom error handler to log all errors at ERROR level for Elasticsearch */
 server.setErrorHandler(function (error, request, reply) {
+    const statusCode = error.statusCode || 500;
+    const route = request.routeOptions?.url || 'unknown';
+
+    // Track error metrics
+    Metrics.countEvent(METRICS.REQUEST, route, "error");
+    Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, "error");
+    if (statusCode >= 500) {
+        Metrics.countEvent(METRICS.REQUEST, route, "5xx_error");
+        Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, "5xx_error");
+    }
+
     // Log the error at ERROR level with full context
     this.log.error({
         err: {
@@ -210,11 +225,10 @@ server.setErrorHandler(function (error, request, reply) {
             hostname: request.hostname,
             remoteAddress: request.ip
         },
-        statusCode: error.statusCode || 500
+        statusCode: statusCode
     }, error.message || 'Request error');
 
     // Send appropriate error response
-    const statusCode = error.statusCode || 500;
     reply.code(statusCode).send({
         error: error.name,
         message: error.message,
