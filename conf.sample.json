@@ -1,0 +1,17 @@
+{
+  "port": "5000",
+  "authKey": "your-auth-key-here",
+  "serviceName": "cocodb",
+  "stage": "production",
+  "allowPublicAccess": false,
+  "mysql": {
+    "host": "your-mysql-host",
+    "port": "3306",
+    "user": "your-mysql-user",
+    "password": "your-mysql-password"
+  },
+  "metrics": {
+    "endpoint": "https://metrics.core.ai/ingest",
+    "apiKey": "your-metrics-api-key"
+  }
+}

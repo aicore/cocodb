@@ -1,4 +1,8 @@
 import LibMySql from "@aicore/libmysql";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {HTTP_STATUS_CODES} from "@aicore/libcommonutils";
 
 const BAD_REQUEST = HTTP_STATUS_CODES.BAD_REQUEST;
@@ -71,6 +75,7 @@ export async function get(request, reply) {
         return response;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
         request.log.error(e);
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();

@@ -1,4 +1,8 @@
 import {getUpdateSchema} from "../api/update.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -20,6 +24,7 @@ export async function update(request, logger = console) {
         response.documentId = modifiedDocumentId;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'update', "error");
         logger.error({
             err: e,
             tableName,

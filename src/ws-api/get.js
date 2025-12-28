@@ -1,4 +1,8 @@
 import {getSchema} from "../api/get.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -18,6 +22,7 @@ export async function get(request, logger = console) {
         response.document = document;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'get', "error");
         logger.error({
             err: e,
             tableName,

@@ -1,4 +1,8 @@
 import {getPutSchema} from "../api/put.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -19,6 +23,7 @@ export async function put(request, logger = console) {
         response.documentId = documentId;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'put', "error");
         logger.error({
             err: e,
             tableName,

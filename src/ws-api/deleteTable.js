@@ -1,4 +1,8 @@
 import {getDeleteTableSchema} from "../api/deleteTable.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -15,6 +19,7 @@ export async function deleteTable(request, logger = console) {
         response.isSuccess = await LibMySql.deleteTable(tableName);
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'deleteTable', "error");
         logger.error({
             err: e,
             tableName,

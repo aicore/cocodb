@@ -113,3 +113,7 @@ dist
 
 # Temporay files for testing
 .tmp
+
+# Configuration files with credentials
+conf.json
+src/app.json

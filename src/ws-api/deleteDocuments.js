@@ -1,4 +1,8 @@
 import {getDeleteDocumentsSchema} from "../api/deleteDocuments.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -18,6 +22,7 @@ export async function deleteDocuments(request, logger = console) {
         response.isSuccess = true;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'deleteDocuments', "error");
         logger.error({
             err: e,
             tableName,

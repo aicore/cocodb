@@ -1,4 +1,8 @@
 import {getQuerySchema} from "../api/query.js";
+import {METRICS} from '../utils/constants.js';
+
+import * as Metrics from '../utils/Metrics.js';
+
 import {COCO_DB_FUNCTIONS} from "@aicore/libcommonutils";
 import LibMySql from "@aicore/libmysql";
 import {addSchema} from "./validator/validator.js";
@@ -20,6 +24,7 @@ export async function query(request, logger = console) {
         response.documents = documents;
 
     } catch (e) {
+        Metrics.countEvent(METRICS.WEBSOCKET, 'query', "error");
         logger.error({
             err: e,
             tableName,
