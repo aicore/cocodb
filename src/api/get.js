@@ -75,7 +75,7 @@ export async function get(request, reply) {
         return response;
 
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         request.log.error(e);
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();

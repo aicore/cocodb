@@ -105,7 +105,7 @@ export async function query(request, reply) {
             documents: documents
         };
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         const response = {
             isSuccess: false,
             errorMessage: e.toString()

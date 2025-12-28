@@ -85,7 +85,7 @@ export async function mathAdd(request, reply) {
             isSuccess: success
         };
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         const response = {
             isSuccess: false,
             errorMessage: e.toString()

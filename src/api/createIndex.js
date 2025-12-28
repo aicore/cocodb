@@ -86,7 +86,7 @@ export async function createIndex(request, reply) {
             jsonField, dataType, isUnique, isNotNull);
 
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         response.isSuccess = false;
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();
