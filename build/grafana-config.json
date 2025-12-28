@@ -1,0 +1,5 @@
+{
+  "serviceName": "cocodb",
+  "stage": "production",
+  "dashboardNamePrefix": "CocoDB"
+}

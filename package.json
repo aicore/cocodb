@@ -32,7 +32,8 @@
     "bumpPatchVersionWithGitTag": "npm version patch",
     "release": "npm run bumpPatchVersionWithGitTag",
     "serve": "node src/index.js",
-    "serve:dev": "nodemon src/index.js"
+    "serve:dev": "nodemon src/index.js",
+    "generateGrafanaDashboard": "node build/generate-grafana-system-dashboard.js"
   },
   "files": [
     "src"
