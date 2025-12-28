@@ -40,6 +40,8 @@ import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 import {processesMessage} from "./ws-api/wsProcessor.js";
 import {getQuerySchema, query} from "./api/query.js";
+import * as Metrics from "./utils/Metrics.js";
+import {METRICS, METRIC_ALL_ROUTES, METRIC_ALL_WS_OPS} from "./utils/constants.js";
 
 const server = fastify({
     logger: createFastifyLogger(),
@@ -81,6 +83,9 @@ server.register(websocket, {
 /* Registering a websocket handler. */
 server.register(async function (fastify) {
     fastify.get('/ws/', {websocket: true}, (socket /* SocketStream */, req /* FastifyRequest */) => {
+        // Track WebSocket connection opened
+        Metrics.countEvent(METRICS.WEBSOCKET, "connection", "opened");
+
         // WebSocket heartbeat mechanism for connection health monitoring
         let isAlive = true;
 
@@ -93,6 +98,7 @@ server.register(async function (fastify) {
             if (!isAlive) {
                 fastify.log.warn('WebSocket connection unresponsive, terminating');
                 clearInterval(heartbeat);
+                Metrics.countEvent(METRICS.WEBSOCKET, "connection", "timeout");
                 return socket.terminate();
             }
             isAlive = false;
@@ -102,14 +108,38 @@ server.register(async function (fastify) {
         // Clean up heartbeat interval on connection close
         socket.on('close', () => {
             clearInterval(heartbeat);
+            Metrics.countEvent(METRICS.WEBSOCKET, "connection", "closed");
         });
 
         // Handle incoming messages
         socket.on('message', async message => {
+            const messageStartTime = Date.now();
+            let parsedMessage;
+
             try {
-                const response = await processesMessage(JSON.parse(message), req.log);
+                parsedMessage = JSON.parse(message);
+                const operationType = parsedMessage.fn || 'unknown';
+
+                const response = await processesMessage(parsedMessage, req.log);
+
+                const messageDuration = Date.now() - messageStartTime;
+                const isSuccess = response.response?.isSuccess !== false;
+
+                // Track per-operation metrics
+                Metrics.valueEvent(METRICS.WEBSOCKET, operationType, "latency_ms", messageDuration);
+                Metrics.countEvent(METRICS.WEBSOCKET, operationType, isSuccess ? "success" : "failure");
+
+                // Aggregate WebSocket operation metrics
+                Metrics.valueEvent(METRICS.WEBSOCKET, METRIC_ALL_WS_OPS, "latency_ms", messageDuration);
+                Metrics.countEvent(METRICS.WEBSOCKET, METRIC_ALL_WS_OPS, isSuccess ? "success" : "failure");
+
                 socket.send(JSON.stringify(response));
             } catch (error) {
+                const messageDuration = Date.now() - messageStartTime;
+                Metrics.countEvent(METRICS.WEBSOCKET, "error", "parse_error");
+                Metrics.valueEvent(METRICS.WEBSOCKET, METRIC_ALL_WS_OPS, "latency_ms", messageDuration);
+                Metrics.countEvent(METRICS.WEBSOCKET, METRIC_ALL_WS_OPS, "failure");
+
                 fastify.log.error({
                     err: {
                         type: error.name,
@@ -128,15 +158,40 @@ server.register(async function (fastify) {
     });
 });
 
+/* Request timing hook for latency measurement */
+server.addHook('onRequest', (request, reply, done) => {
+    request.startTime = Date.now();
+    done();
+});
+
 /* Adding an authentication hook to the server. A hook is a function that is called when a request is made to
 the server. */
 server.addHook('onRequest', (request, reply, done) => {
     if (!isAuthenticated(request, reply)) {
+        Metrics.countEvent(METRICS.AUTH, "request", "failure");
         reply.code(HTTP_STATUS_CODES.UNAUTHORIZED);
         done(new Error('Wrong key'));
     } else {
+        Metrics.countEvent(METRICS.AUTH, "request", "success");
         done();
     }
+});
+
+/* Response metrics hook */
+server.addHook('onResponse', (request, reply, done) => {
+    const duration = Date.now() - request.startTime;
+    const route = request.routeOptions?.url || 'unknown';
+    const statusLabel = `${Math.floor(reply.statusCode / 100)}xx`;
+    const resultLabel = reply.statusCode < 400 ? "success" : "failure";
+
+    Metrics.valueEvent(METRICS.REQUEST, route, "latency_ms", duration);
+    Metrics.countEvent(METRICS.REQUEST, route, statusLabel);
+    Metrics.countEvent(METRICS.REQUEST, route, resultLabel);
+
+    Metrics.valueEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, "latency_ms", duration);
+    Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, statusLabel);
+    Metrics.countEvent(METRICS.REQUEST, METRIC_ALL_ROUTES, resultLabel);
+    done();
 });
 
 /* Custom error handler to log all errors at ERROR level for Elasticsearch */
@@ -239,6 +294,15 @@ export async function initMysql(configs) {
  */
 export async function startServer(configs) {
     try {
+        // Initialize metrics (will be no-op in dev/test)
+        if (configs.metrics) {
+            Metrics.init(
+                configs.serviceName || 'cocodb',
+                configs.stage,
+                configs.metrics.endpoint,
+                configs.metrics.apiKey
+            );
+        }
         init(configs.authKey);
         await server.listen({port: configs.port, host: configs.allowPublicAccess ? '0.0.0.0' : 'localhost'});
     } catch (err) {
@@ -248,6 +312,7 @@ export async function startServer(configs) {
 }
 
 export async function close() {
+    await Metrics.flush().catch(console.error);
     await server.close();
     LibMySql.close();
 }
