@@ -1,6 +1,7 @@
 /*global describe, it*/
 import * as assert from 'assert';
 import * as chai from 'chai';
+import * as fs from 'fs';
 import {deleteAppConfig, getConfigs} from "../../../src/utils/configs.js";
 
 let expect = chai.expect;
@@ -9,6 +10,16 @@ describe('unit Tests', function () {
 
     it('verify config fail if APP_CONFIG not set properly', function () {
         const backEnv = process.env.APP_CONFIG;
+        const appJsonPath = './src/app.json';
+        const appJsonBackup = './src/app.json.backup';
+
+        // Temporarily move src/app.json if it exists
+        let appJsonExisted = false;
+        if (fs.existsSync(appJsonPath)) {
+            fs.renameSync(appJsonPath, appJsonBackup);
+            appJsonExisted = true;
+        }
+
         delete process.env.APP_CONFIG;
         deleteAppConfig();
         let exceptionOccurred = false;
@@ -20,7 +31,13 @@ describe('unit Tests', function () {
             exceptionOccurred = true;
         }
         expect(exceptionOccurred).eql(true);
+
+        // Restore
         process.env.APP_CONFIG = backEnv;
+        if (appJsonExisted) {
+            fs.renameSync(appJsonBackup, appJsonPath);
+        }
+        deleteAppConfig(); // Clear cached config to allow next test to read from correct file
 
     });
     it('getConfigShould pass', function () {

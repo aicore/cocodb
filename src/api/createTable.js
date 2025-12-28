@@ -15,7 +15,7 @@ async function _createTable(request, reply, tableName) {
         response.isSuccess = await LibMySql.createTable(tableName);
 
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();
         request.log.error(e);

@@ -76,7 +76,7 @@ export async function getFromIndex(request, reply) {
             isSuccess: true, documents: documents
         };
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         const response = {
             isSuccess: false, errorMessage: e.toString()
         };

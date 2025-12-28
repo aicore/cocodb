@@ -94,7 +94,21 @@ describe('Logger Configuration Tests', () => {
         // Don't create any config file
         delete process.env.APP_CONFIG;
 
+        // Temporarily move src/app.json if it exists to simulate missing config
+        const appJsonPath = './src/app.json';
+        const appJsonBackup = './src/app.json.backup-logger-test';
+        let appJsonExisted = false;
+        if (fs.existsSync(appJsonPath)) {
+            fs.renameSync(appJsonPath, appJsonBackup);
+            appJsonExisted = true;
+        }
+
         const loggerConfig = createFastifyLogger();
+
+        // Restore src/app.json
+        if (appJsonExisted) {
+            fs.renameSync(appJsonBackup, appJsonPath);
+        }
 
         // Should default to development (pretty) when config doesn't exist
         assert.ok(loggerConfig.transport, 'Should have transport config when defaulting to dev');

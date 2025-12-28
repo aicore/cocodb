@@ -15,7 +15,7 @@ async function _deleteDatabase(request, reply, databaseName) {
         response.isSuccess = await LibMySql.deleteDataBase(databaseName);
 
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();
         request.log.error(e);

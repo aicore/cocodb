@@ -54,7 +54,7 @@ export async function deleteKey(request, reply) {
         response.isSuccess = await LibMySql.deleteKey(tableName, documentId, condition);
 
     } catch (e) {
-        Metrics.countEvent(METRICS.REQUEST, request.routeOptions.url || 'unknown', "error");
+        Metrics.countEvent(METRICS.REQUEST, request.routeOptions?.url || 'unknown', "error");
         reply.code(BAD_REQUEST);
         response.errorMessage = e.toString();
         request.log.error(e);
