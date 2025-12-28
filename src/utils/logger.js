@@ -35,8 +35,12 @@ export function createFastifyLogger() {
     }
 
     // ECS format for production/staging
-    return ecsFormat({
-        convertReqRes: true,  // Converts req/res to ECS HTTP fields
-        convertErr: true      // Converts err to ECS error fields
-    });
+    // Set level to 'warn' to suppress INFO-level request logging bloat
+    return {
+        level: 'warn',
+        ...ecsFormat({
+            convertReqRes: true,  // Converts req/res to ECS HTTP fields
+            convertErr: true      // Converts err to ECS error fields
+        })
+    };
 }
