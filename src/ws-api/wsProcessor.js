@@ -15,6 +15,9 @@ import {mathAdd} from "./mathadd.js";
 import {update} from "./update.js";
 import {validateRequest, validateResponse} from "./validator/validator.js";
 import {query} from "./query.js";
+import {listDatabases} from "./listDatabases.js";
+import {listTables} from "./listTables.js";
+import {getTableIndexes} from "./getTableIndexes.js";
 
 
 /**
@@ -79,6 +82,15 @@ export async function processesMessage(message, logger = console) {
             break;
         case  COCO_DB_FUNCTIONS.query:
             returnMessage.response = await query(message.request, logger);
+            break;
+        case 'listDatabases':
+            returnMessage.response = await listDatabases(message.request, logger);
+            break;
+        case 'listTables':
+            returnMessage.response = await listTables(message.request, logger);
+            break;
+        case 'getTableIndexes':
+            returnMessage.response = await getTableIndexes(message.request, logger);
             break;
         default:
             returnMessage.response.isSuccess = false;

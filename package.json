@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@aicore/libcommonutils": "1.0.20",
-    "@aicore/libmysql": "1.0.48",
+    "@aicore/libmysql": "1.0.49",
     "@aicore/metrics": "^1.2.9",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@fastify/websocket": "11.2.0",
