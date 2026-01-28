@@ -31,8 +31,7 @@ async function _listDatabases(request, reply) {
 // Refer https://json-schema.org/understanding-json-schema/index.html
 const listDatabasesSchema = {
     schema: {
-        // Empty body schema for WebSocket validation
-        body: {
+        querystring: {
             type: 'object',
             properties: {},
             additionalProperties: false
