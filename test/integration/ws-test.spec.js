@@ -772,6 +772,30 @@ describe('Integration: ws end points', function () {
         expect(uniqueIndex.isUnique).eql(true);
     });
 
+    it('getTableIndexes should include nested field index', async function () {
+        // Create an index on a nested field
+        await createIndex(TABLE_NAME, 'location.city', 'VARCHAR(255)', false, false);
+
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+
+        // Find the nested index by jsonField (stored WITHOUT $. prefix, uses dot notation)
+        const nestedIndex = response.indexes.find(idx => idx.jsonField === 'location.city');
+        expect(nestedIndex).to.exist;
+    });
+
+    it('getTableIndexes should include deeply nested field index', async function () {
+        // Create an index on a deeply nested field
+        await createIndex(TABLE_NAME, 'location.layout.block', 'VARCHAR(255)', false, false);
+
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+
+        // Find the deeply nested index by jsonField
+        const deepNestedIndex = response.indexes.find(idx => idx.jsonField === 'location.layout.block');
+        expect(deepNestedIndex).to.exist;
+    });
+
     it('getTableIndexes should return correct index structure', async function () {
         const response = await getTableIndexes(TABLE_NAME);
         expect(response.isSuccess).eql(true);
