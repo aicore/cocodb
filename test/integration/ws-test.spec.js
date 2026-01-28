@@ -7,12 +7,12 @@ import {
     isServerStarted,
     TABLE_NAME
 } from "./setupIntegTest.js";
-import {createDb, createTable, deleteDb, deleteTable, init, hello} from "@aicore/cocodb-ws-client";
 import {
-    createIndex, deleteDocument, deleteDocuments, get, getFromIndex, getFromNonIndex, put, update,
-    mathAdd, query
+    init, close as wsClose, hello, put, get, createDb, deleteDb,
+    createTable, deleteTable, createIndex, getFromIndex, getFromNonIndex,
+    deleteDocument, deleteDocuments, update, mathAdd, query,
+    listDatabases, listTables, getTableIndexes
 } from "@aicore/cocodb-ws-client";
-import {close as wsClose} from "@aicore/cocodb-ws-client";
 
 let expect = chai.expect;
 
@@ -635,6 +635,168 @@ describe('Integration: ws end points', function () {
         expect(queryResp.documents.length).eql(10);
         expect(lastDocCounter).eql(queryResp.documents[0].counter);
 
+    });
+
+    // ============================================
+    // listDatabases Tests
+    // ============================================
+
+    it('listDatabases should return list of databases including test database', async function () {
+        const response = await listDatabases();
+        expect(response.isSuccess).eql(true);
+        expect(response.databases).to.be.an('array');
+        expect(response.databases.length).to.be.greaterThan(0);
+        expect(response.databases).to.include(DATABASE_NAME);
+    });
+
+    it('listDatabases should include newly created database', async function () {
+        const newDbName = 'test_list_db_' + Date.now();
+        await createDb(newDbName);
+
+        const response = await listDatabases();
+        expect(response.isSuccess).eql(true);
+        expect(response.databases).to.include(newDbName);
+
+        // Cleanup
+        await deleteDb(newDbName);
+    });
+
+    it('listDatabases should not include deleted database', async function () {
+        const tempDbName = 'temp_db_' + Date.now();
+        await createDb(tempDbName);
+        await deleteDb(tempDbName);
+
+        const response = await listDatabases();
+        expect(response.isSuccess).eql(true);
+        expect(response.databases).to.not.include(tempDbName);
+    });
+
+    // ============================================
+    // listTables Tests
+    // ============================================
+
+    it('listTables should return tables in database', async function () {
+        const response = await listTables(DATABASE_NAME);
+        expect(response.isSuccess).eql(true);
+        expect(response.tables).to.be.an('array');
+    });
+
+    it('listTables should include the test table', async function () {
+        const response = await listTables(DATABASE_NAME);
+        expect(response.isSuccess).eql(true);
+        // TABLE_NAME is in format "database.table", extract table part
+        const tableName = TABLE_NAME.split('.')[1];
+        expect(response.tables).to.include(tableName);
+    });
+
+    it('listTables should include newly created table', async function () {
+        const newTableName = DATABASE_NAME + '.new_test_table_' + Date.now();
+        await createTable(newTableName);
+
+        const response = await listTables(DATABASE_NAME);
+        expect(response.isSuccess).eql(true);
+        expect(response.tables).to.include(newTableName.split('.')[1]);
+
+        // Cleanup
+        await deleteTable(newTableName);
+    });
+
+    it('listTables should not include deleted table', async function () {
+        const tempTableName = DATABASE_NAME + '.temp_table_' + Date.now();
+        await createTable(tempTableName);
+        await deleteTable(tempTableName);
+
+        const response = await listTables(DATABASE_NAME);
+        expect(response.isSuccess).eql(true);
+        expect(response.tables).to.not.include(tempTableName.split('.')[1]);
+    });
+
+    it('listTables should return empty array for database with no tables', async function () {
+        const emptyDbName = 'empty_db_' + Date.now();
+        await createDb(emptyDbName);
+
+        const response = await listTables(emptyDbName);
+        expect(response.isSuccess).eql(true);
+        expect(response.tables).to.be.an('array');
+        expect(response.tables.length).eql(0);
+
+        // Cleanup
+        await deleteDb(emptyDbName);
+    });
+
+    it('listTables should fail for non-existent database', async function () {
+        const response = await listTables('nonexistent_database_xyz_12345');
+        expect(response.isSuccess).eql(false);
+        expect(response.errorMessage).to.exist;
+    });
+
+    // ============================================
+    // getTableIndexes Tests
+    // ============================================
+
+    it('getTableIndexes should return PRIMARY index for table', async function () {
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+        expect(response.indexes).to.be.an('array');
+        expect(response.indexes.length).to.be.greaterThan(0);
+
+        // Every cocodb table has a PRIMARY index on documentID
+        const primaryIndex = response.indexes.find(idx => idx.isPrimary === true);
+        expect(primaryIndex).to.exist;
+        expect(primaryIndex.indexName).eql('PRIMARY');
+        expect(primaryIndex.columnName).eql('documentID');
+    });
+
+    it('getTableIndexes should include custom created index', async function () {
+        // Create a custom index
+        await createIndex(TABLE_NAME, 'customerName', 'VARCHAR(255)', false, false);
+
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+
+        // Find the custom index by jsonField (stored WITHOUT $. prefix)
+        const customIndex = response.indexes.find(idx => idx.jsonField === 'customerName');
+        expect(customIndex).to.exist;
+    });
+
+    it('getTableIndexes should show unique index properties', async function () {
+        // Create a unique index
+        await createIndex(TABLE_NAME, 'email', 'VARCHAR(255)', true, false);
+
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+
+        // Find the unique index by jsonField (stored WITHOUT $. prefix)
+        const uniqueIndex = response.indexes.find(idx => idx.jsonField === 'email');
+        expect(uniqueIndex).to.exist;
+        expect(uniqueIndex.isUnique).eql(true);
+    });
+
+    it('getTableIndexes should return correct index structure', async function () {
+        const response = await getTableIndexes(TABLE_NAME);
+        expect(response.isSuccess).eql(true);
+
+        // Verify index object structure
+        const index = response.indexes[0];
+        expect(index).to.have.property('indexName');
+        expect(index).to.have.property('columnName');
+        expect(index).to.have.property('isUnique');
+        expect(index).to.have.property('isPrimary');
+        expect(index).to.have.property('sequenceInIndex');
+        expect(index).to.have.property('indexType');
+        expect(index).to.have.property('isNullable');
+    });
+
+    it('getTableIndexes should fail for non-existent table', async function () {
+        const response = await getTableIndexes(DATABASE_NAME + '.nonexistent_table_xyz');
+        expect(response.isSuccess).eql(false);
+        expect(response.errorMessage).to.exist;
+    });
+
+    it('getTableIndexes should fail for invalid table name format', async function () {
+        const response = await getTableIndexes('invalid_table_name_without_dot');
+        expect(response.isSuccess).eql(false);
+        expect(response.errorMessage).to.exist;
     });
 
 });
