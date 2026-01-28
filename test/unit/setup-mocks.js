@@ -73,6 +73,30 @@ let mockedFunctions = {
             resolve(true);
         });
 
+    },
+    listDatabases: function () {
+        return new Promise(resolve => {
+            resolve(['test', 'mysql', 'information_schema']);
+        });
+    },
+    listTables: function (databaseName) {
+        return new Promise(resolve => {
+            resolve(['customers', 'orders']);
+        });
+    },
+    getTableIndexes: function (tableName) {
+        return new Promise(resolve => {
+            resolve([{
+                indexName: 'PRIMARY',
+                columnName: 'documentID',
+                jsonField: null,
+                isUnique: true,
+                isPrimary: true,
+                sequenceInIndex: 1,
+                indexType: 'BTREE',
+                isNullable: false
+            }]);
+        });
     }
 };
 
@@ -93,6 +117,9 @@ function _setup() {
     LibMySql.createDataBase = mockedFunctions.createDataBase;
     LibMySql.deleteDataBase = mockedFunctions.deleteDataBase;
     LibMySql.mathAdd = mockedFunctions.mathAdd;
+    LibMySql.listDatabases = mockedFunctions.listDatabases;
+    LibMySql.listTables = mockedFunctions.listTables;
+    LibMySql.getTableIndexes = mockedFunctions.getTableIndexes;
     setupDone = true;
 }
 

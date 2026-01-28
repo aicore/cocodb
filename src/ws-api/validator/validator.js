@@ -3,6 +3,21 @@ import Ajv from "ajv";
 
 export const AJV = new Ajv();
 
+// Additional functions not yet in COCO_DB_FUNCTIONS from libcommonutils
+const ADDITIONAL_FUNCTIONS = {
+    listDatabases: 'listDatabases',
+    listTables: 'listTables',
+    getTableIndexes: 'getTableIndexes'
+};
+
+/**
+ * Checks if a function name is a valid cocodb function
+ * @param {string} fn - The function name to check
+ * @returns {boolean} True if the function is valid
+ */
+function isValidFunction(fn) {
+    return (fn in COCO_DB_FUNCTIONS) || (fn in ADDITIONAL_FUNCTIONS);
+}
 
 /* A map that maps a function name to a validator object. */
 const FN_TO_VALIDATOR = {};
@@ -13,7 +28,7 @@ const FN_TO_VALIDATOR = {};
  * @param{Object} schema - The schema object that you want to validate against.
  */
 export function addSchema(fn, schema) {
-    if (!(fn in COCO_DB_FUNCTIONS)) {
+    if (!isValidFunction(fn)) {
         throw new Error('Please provide valid function');
     }
     if (isObjectEmpty(schema)) {
@@ -58,10 +73,14 @@ export function addSchema(fn, schema) {
  * @returns {boolean} A function that takes two arguments, fn and request, and returns a boolean.
  */
 export function validateRequest(fn, request) {
-    if (!(fn in COCO_DB_FUNCTIONS)) {
+    if (!isValidFunction(fn)) {
         return false;
     }
     if (fn === COCO_DB_FUNCTIONS.hello) {
+        return true;
+    }
+    // listDatabases has no required request parameters
+    if (fn === ADDITIONAL_FUNCTIONS.listDatabases) {
         return true;
     }
     if (!isObject(request) || isObjectEmpty(request)) {
@@ -84,7 +103,7 @@ export function validateRequest(fn, request) {
  * @returns {boolean}
  */
 export function validateResponse(fn, response) {
-    if (!(fn in COCO_DB_FUNCTIONS)) {
+    if (!isValidFunction(fn)) {
         return false;
     }
     if (fn === COCO_DB_FUNCTIONS.hello) {

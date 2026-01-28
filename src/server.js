@@ -40,6 +40,9 @@ import {deleteDb, getDeleteDBSchema} from "./api/deleteDb.js";
 import {getMathAddSchema, mathAdd} from "./api/mathadd.js";
 import {processesMessage} from "./ws-api/wsProcessor.js";
 import {getQuerySchema, query} from "./api/query.js";
+import {listDatabases, getListDatabasesSchema} from "./api/listDatabases.js";
+import {listTables, getListTablesSchema} from "./api/listTables.js";
+import {getTableIndexes, getGetTableIndexesSchema} from "./api/getTableIndexes.js";
 import * as Metrics from "./utils/Metrics.js";
 import {METRICS, METRIC_ALL_ROUTES, METRIC_ALL_WS_OPS} from "./utils/constants.js";
 
@@ -286,6 +289,16 @@ server.post('/mathAdd', getMathAddSchema(), function (request, reply) {
 });
 server.post('/query', getQuerySchema(), function (request, reply) {
     return query(request, reply);
+});
+
+server.get('/listDatabases', getListDatabasesSchema(), function (request, reply) {
+    return listDatabases(request, reply);
+});
+server.get('/listTables', getListTablesSchema(), function (request, reply) {
+    return listTables(request, reply);
+});
+server.get('/getTableIndexes', getGetTableIndexesSchema(), function (request, reply) {
+    return getTableIndexes(request, reply);
 });
 
 /**
