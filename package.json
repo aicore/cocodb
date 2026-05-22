@@ -74,7 +74,7 @@
     "ajv": "8.17.1",
     "fastify": "5.6.2",
     "pino-pretty": "^11.0.0",
-    "uuid": "11.1.0"
+    "uuid": "11.1.1"
   },
   "optionalDependencies": {
     "bufferutil": "4.1.0",
