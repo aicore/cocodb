@@ -65,7 +65,7 @@
     "nodemon": "3.1.11"
   },
   "dependencies": {
-    "@aicore/cocodb-ws-client": "^1.0.27",
+    "@aicore/cocodb-ws-client": "^1.0.28",
     "@aicore/libcommonutils": "1.0.20",
     "@aicore/libmysql": "^1.0.50",
     "@aicore/metrics": "^1.2.9",
