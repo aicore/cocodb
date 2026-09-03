@@ -38,6 +38,22 @@ const querySchema = {
                         },
                         pageLimit: {
                             type: 'integer'
+                        },
+                        orderByIndexedField: {
+                            type: 'object',
+                            required: ['field'],
+                            properties: {
+                                field: {
+                                    type: 'string',
+                                    minLength: 1,
+                                    maxLength: 255
+                                },
+                                direction: {
+                                    type: 'string',
+                                    enum: ['ASC', 'DESC'],
+                                    default: 'ASC'
+                                }
+                            }
                         }
                     }
                 }

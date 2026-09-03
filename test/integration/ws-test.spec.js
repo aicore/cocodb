@@ -823,6 +823,61 @@ describe('Integration: ws end points', function () {
         expect(response.errorMessage).to.exist;
     });
 
+
+    it('orderByIndexedField should sort getFromIndex and query results by an indexed field', async function () {
+        await createIndex(TABLE_NAME, 'Age', 'INT');
+        await createIndex(TABLE_NAME, 'lastName', 'VARCHAR(50)');
+        await _populateDB(); // 100 docs with lastName Alice and Age 0..99
+        const ages = resp => resp.documents.map(doc => doc.Age);
+        const range = (from, to) => Array.from({length: Math.abs(to - from) + 1},
+            (_, i) => from + (to > from ? i : -i));
+
+        // query: range predicate and ordering on the same index, paginated
+        let resp = await query(TABLE_NAME, "$.Age >= 0", ['Age'],
+            {pageOffset: 0, pageLimit: 10, orderByIndexedField: {field: 'Age', direction: 'DESC'}});
+        expect(resp.isSuccess).eql(true);
+        expect(ages(resp)).eql(range(99, 90));
+        resp = await query(TABLE_NAME, "$.Age >= 0", ['Age'],
+            {pageOffset: 10, pageLimit: 10, orderByIndexedField: {field: 'Age', direction: 'DESC'}});
+        expect(resp.isSuccess).eql(true);
+        expect(ages(resp)).eql(range(89, 80));
+
+        // direction defaults to ASC
+        resp = await query(TABLE_NAME, "$.Age < 5", ['Age'], {orderByIndexedField: {field: 'Age'}});
+        expect(resp.isSuccess).eql(true);
+        expect(ages(resp)).eql(range(0, 4));
+
+        // getFromIndex: equality on one indexed field, ordered by another indexed field
+        resp = await getFromIndex(TABLE_NAME, {lastName: 'Alice'},
+            {pageOffset: 0, pageLimit: 5, orderByIndexedField: {field: 'Age', direction: 'DESC'}});
+        expect(resp.isSuccess).eql(true);
+        expect(ages(resp)).eql(range(99, 95));
+    });
+
+    it('orderByIndexedField should be rejected for non indexed fields, bad directions and getFromNonIndex',
+        async function () {
+            await createIndex(TABLE_NAME, 'Age', 'INT');
+            await _populateDB();
+
+            // lastName is not indexed here, so there is no column to order by
+            let resp = await query(TABLE_NAME, "$.Age >= 0", ['Age'], {orderByIndexedField: {field: 'lastName'}});
+            expect(resp.isSuccess).eql(false);
+
+            resp = await query(TABLE_NAME, "$.Age >= 0", ['Age'],
+                {orderByIndexedField: {field: 'Age', direction: 'sideways'}});
+            expect(resp.isSuccess).eql(false);
+
+            // getFromNonIndex is the scan api and never orders
+            resp = await getFromNonIndex(TABLE_NAME, {lastName: 'Alice'}, {orderByIndexedField: {field: 'Age'}});
+            expect(resp.isSuccess).eql(false);
+            expect(resp.errorMessage).to.include('not supported');
+
+            // the plain apis keep working after the rejected calls
+            resp = await query(TABLE_NAME, "$.Age >= 0", ['Age'], {orderByIndexedField: {field: 'Age'}});
+            expect(resp.isSuccess).eql(true);
+            expect(resp.documents.length).eql(100);
+        });
+
 });
 
 async function writeAndReadFromDb(numberOfTimes) {
