@@ -111,5 +111,62 @@ describe('unit test for create database tests', function () {
         expect(resp.response.errorMessage).eql('server did not send valid data');
         LibMySql.getFromIndex = saveExecute;
     });
+
+    it('getFromIndex processMessage should pass orderByIndexedField option through to LibMySql', async function () {
+        const saveExecute = LibMySql.getFromIndex;
+        let receivedOptions;
+        LibMySql.getFromIndex = async function (_tableName, _queryObject, options) {
+            receivedOptions = options;
+            return [{1: '2'}];
+        };
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.getFromIndex,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                queryObject: {hello: 'world'},
+                options: {
+                    orderByIndexedField: {field: 'count', direction: 'DESC'}
+                }
+            }
+        });
+        expect(resp.response.isSuccess).eql(true);
+        expect(receivedOptions.orderByIndexedField).eql({field: 'count', direction: 'DESC'});
+        LibMySql.getFromIndex = saveExecute;
+    });
+
+    it('getFromIndex processMessage should fail if orderByIndexedField direction is invalid', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.getFromIndex,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                queryObject: {hello: 'world'},
+                options: {
+                    orderByIndexedField: {field: 'count', direction: 'sideways'}
+                }
+            }
+        });
+        expect(resp.fn).eql(COCO_DB_FUNCTIONS.getFromIndex);
+        expect(resp.response.isSuccess).eql(false);
+        expect(resp.response.errorMessage).eql('request validation Failed');
+    });
+
+    it('getFromIndex processMessage should fail if orderByIndexedField field is missing', async function () {
+        const resp = await processesMessage({
+            fn: COCO_DB_FUNCTIONS.getFromIndex,
+            id: '1',
+            request: {
+                tableName: 'hello.x',
+                queryObject: {hello: 'world'},
+                options: {
+                    orderByIndexedField: {direction: 'ASC'}
+                }
+            }
+        });
+        expect(resp.response.isSuccess).eql(false);
+        expect(resp.response.errorMessage).eql('request validation Failed');
+    });
+
 });
 

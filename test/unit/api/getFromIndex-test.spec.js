@@ -70,4 +70,46 @@ describe('Ut for getFromIndex', function () {
 
     });
 
+
+    it('getFromIndex should forward options.orderByIndexedField to LibMySql', async function () {
+        const saveExecute = LibMySql.getFromIndex;
+        let receivedOptions;
+        LibMySql.getFromIndex = async function (_tableName, _queryObject, options) {
+            receivedOptions = options;
+            return [];
+        };
+        const orderBy = {field: 'count', direction: 'DESC'};
+        const response = await getFromIndex({
+            body: {
+                tableName: 'customers',
+                queryObject: {id: "1"},
+                options: {orderByIndexedField: orderBy, pageOffset: 0, pageLimit: 10}
+            },
+            log: {
+                error: function (msg) {
+                },
+                info: function (msg) {
+                }
+            }
+        }, {
+            code: function (code) {
+            }
+        });
+        expect(response.isSuccess).eql(true);
+        expect(receivedOptions.orderByIndexedField).eql(orderBy);
+        expect(receivedOptions.pageOffset).eql(0);
+        expect(receivedOptions.pageLimit).eql(10);
+        LibMySql.getFromIndex = saveExecute;
+    });
+
+    it('getFromIndex schema should define options.orderByIndexedField', function () {
+        const schema = getFromIndexSchema();
+        const orderBy = schema.schema.body.properties.options.properties.orderByIndexedField;
+        expect(orderBy.type).eql('object');
+        expect(orderBy.required).eql(['field']);
+        expect(orderBy.properties.field.type).eql('string');
+        expect(orderBy.properties.direction.enum).eql(['ASC', 'DESC']);
+        expect(orderBy.properties.direction.default).eql('ASC');
+    });
+
 });
